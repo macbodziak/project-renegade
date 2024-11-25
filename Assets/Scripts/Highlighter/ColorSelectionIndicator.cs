@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class ColorSelectionIndicator : SelectionIndicator, ISelectionIndicator
+public class ColorSelectionIndicator : SelectionIndicator
 {
     [SerializeField]
     Color _selectedTint;
@@ -16,23 +16,10 @@ public class ColorSelectionIndicator : SelectionIndicator, ISelectionIndicator
         _originTint = _material.HasProperty("_BaseColor") ? _material.GetColor("_BaseColor") : _material.color;
     }
 
-    public override SelectionIndicatorState State
-    {
-        get
-        {
-            return _state;
-        }
-        set
-        {
-            SetState(value);
-        }
-    }
 
-    private void SetState(SelectionIndicatorState value)
+    protected override void OnEnterState()
     {
-        _state = value;
-
-        switch (_state)
+        switch (State)
         {
             case SelectionIndicatorState.InActive:
                 _material.SetColor("_BaseColor", _originTint);
@@ -40,7 +27,7 @@ public class ColorSelectionIndicator : SelectionIndicator, ISelectionIndicator
             case SelectionIndicatorState.Selected:
                 _material.SetColor("_BaseColor", _selectedTint);
                 break;
-            case SelectionIndicatorState.Checked:
+            case SelectionIndicatorState.Reviewed:
                 _material.SetColor("_BaseColor", _checkedTint);
                 break;
         }

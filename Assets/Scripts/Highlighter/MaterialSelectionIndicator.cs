@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class MaterialSelectionIndicator : SelectionIndicator, ISelectionIndicator
+public class MaterialSelectionIndicator : SelectionIndicator
 {
     Material _originalMaterial;
     [SerializeField]
@@ -16,23 +16,10 @@ public class MaterialSelectionIndicator : SelectionIndicator, ISelectionIndicato
         _originalMaterial = _renderer.material;
     }
 
-    public override SelectionIndicatorState State
-    {
-        get
-        {
-            return _state;
-        }
-        set
-        {
-            SetState(value);
-        }
-    }
 
-    private void SetState(SelectionIndicatorState value)
+    protected override void OnEnterState()
     {
-        _state = value;
-
-        switch (_state)
+        switch (State)
         {
             case SelectionIndicatorState.InActive:
                 _renderer.material = _originalMaterial;
@@ -40,7 +27,7 @@ public class MaterialSelectionIndicator : SelectionIndicator, ISelectionIndicato
             case SelectionIndicatorState.Selected:
                 _renderer.material = _selectedMaterial;
                 break;
-            case SelectionIndicatorState.Checked:
+            case SelectionIndicatorState.Reviewed:
                 _renderer.material = _checkedMaterial;
                 break;
         }

@@ -3,7 +3,7 @@ using System.Collections;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-public class ObjectSelectionIndicator : SelectionIndicator, ISelectionIndicator
+public class ObjectSelectionIndicator : SelectionIndicator
 {
     [SerializeField]
     [Required]
@@ -29,23 +29,12 @@ public class ObjectSelectionIndicator : SelectionIndicator, ISelectionIndicator
         _highlightObject.SetActive(false);
     }
 
-    public override SelectionIndicatorState State
-    {
-        get
-        {
-            return _state;
-        }
-        set
-        {
-            SetState(value);
-        }
-    }
 
-    private void SetState(SelectionIndicatorState value)
-    {
-        _state = value;
 
-        switch (_state)
+    protected override void OnEnterState()
+    {
+
+        switch (State)
         {
             case SelectionIndicatorState.InActive:
                 _highlightObject.SetActive(false);
@@ -53,7 +42,7 @@ public class ObjectSelectionIndicator : SelectionIndicator, ISelectionIndicator
             case SelectionIndicatorState.Selected:
                 _highlightObject.SetActive(true);
                 break;
-            case SelectionIndicatorState.Checked:
+            case SelectionIndicatorState.Reviewed:
                 _highlightObject.SetActive(true);
                 StartCoroutine(Oscillate());
                 break;
@@ -66,7 +55,7 @@ public class ObjectSelectionIndicator : SelectionIndicator, ISelectionIndicator
         float baseScale_x = _highlightObject.transform.localScale.x;
         float baseScale_z = _highlightObject.transform.localScale.z;
 
-        while (_state == SelectionIndicatorState.Checked)
+        while (State == SelectionIndicatorState.Reviewed)
         {
             float newScale_x = baseScale_x * (1 + Mathf.Sin(Time.time * angularVelocity) * _amplitude);
             float newScale_z = baseScale_z * (1 + Mathf.Sin(Time.time * angularVelocity) * _amplitude);

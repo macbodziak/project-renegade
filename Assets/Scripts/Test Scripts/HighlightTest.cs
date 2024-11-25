@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
@@ -5,15 +6,27 @@ using UnityEngine;
 public class HighlightTest : SerializedMonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    [OdinSerialize][Required] IHighlighter highlighter;
-    int stateID = 0;
+    [SerializeField][Required] List<SelectionIndicator> indicators;
+
+    void Awake()
+    {
+    }
 
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            stateID = (stateID + 1) % 3;
-            highlighter.State = (HighlightState)stateID;
+            foreach (var indicator in indicators)
+            {
+                indicator.IsActive = !indicator.IsActive;
+            }
+        }
+        if (Input.GetKeyDown(KeyCode.LeftControl))
+        {
+            foreach (var indicator in indicators)
+            {
+                indicator.IsReviewed = !indicator.IsReviewed;
+            }
         }
     }
 }
