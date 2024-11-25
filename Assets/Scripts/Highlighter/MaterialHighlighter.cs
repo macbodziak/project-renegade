@@ -1,19 +1,19 @@
 using UnityEngine;
 
-public class ColorHighlighter : Highlighter, IHighlighter
+public class MaterialHighlighter : Highlighter, IHighlighter
 {
+    Material _originalMaterial;
     [SerializeField]
-    Color _selectedTint;
+    Material _selectedMaterial;
     [SerializeField]
-    Color _checkedTint;
-    Color _originTint;
-    Material _material;
+    Material _checkedMaterial;
+    Renderer _renderer;
+
 
     public void Start()
     {
-        _material = GetComponentInChildren<Renderer>().material;
-        Debug.Assert(_material != null);
-        _originTint = _material.HasProperty("_BaseColor") ? _material.GetColor("_BaseColor") : _material.color;
+        _renderer = GetComponentInChildren<Renderer>();
+        _originalMaterial = _renderer.material;
     }
 
     public override HighlightState State
@@ -35,13 +35,13 @@ public class ColorHighlighter : Highlighter, IHighlighter
         switch (_state)
         {
             case HighlightState.InActive:
-                _material.SetColor("_BaseColor", _originTint);
+                _renderer.material = _originalMaterial;
                 break;
             case HighlightState.Selected:
-                _material.SetColor("_BaseColor", _selectedTint);
+                _renderer.material = _selectedMaterial;
                 break;
             case HighlightState.Checked:
-                _material.SetColor("_BaseColor", _checkedTint);
+                _renderer.material = _checkedMaterial;
                 break;
         }
     }

@@ -410,7 +410,7 @@ MonoBehaviour:
     SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects:
-    - {fileID: 694833907}
+    - {fileID: 707765726}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -447,6 +447,7 @@ GameObject:
   - component: {fileID: 694833905}
   - component: {fileID: 694833906}
   - component: {fileID: 694833907}
+  - component: {fileID: 694833908}
   m_Layer: 0
   m_Name: Player Unit
   m_TagString: Untagged
@@ -531,13 +532,27 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 694833902}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 616fb966b4ec4134a9d1b7f2ffafafd1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _selectedMaterial: {fileID: 2100000, guid: aa02261243473d04fb2154b27a5f1316, type: 2}
+  _checkedMaterial: {fileID: 2100000, guid: b3498282888feac4893e6ce9f1c6a4b4, type: 2}
+--- !u!114 &694833908
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 694833902}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4836434c7ddb6564eaddd1f25c2a0803, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _selectedTint: {r: 1, g: 0.9532509, b: 0, a: 1}
-  _checkedTint: {r: 0.061599493, g: 1, b: 0, a: 1}
+  _selectedTint: {r: 0.9528302, g: 0, b: 0, a: 1}
+  _checkedTint: {r: 0, g: 0.48129225, b: 1, a: 0.8156863}
 --- !u!1 &707765720
 GameObject:
   m_ObjectHideFlags: 0
