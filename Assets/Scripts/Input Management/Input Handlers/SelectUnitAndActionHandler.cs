@@ -4,8 +4,6 @@ using System.Collections.Generic;
 
 public class SelectUnitAndActionHandler : InputHandler
 {
-
-    // List<Unit>
     public SelectUnitAndActionHandler(LayerMask unitLayerMask) : base(unitLayerMask)
     {
     }
@@ -37,8 +35,6 @@ public class SelectUnitAndActionHandler : InputHandler
                 if (clickedUnit.IsPlayer)
                 {
                     UnitSelectionManager.Instance.SetSelectedUnit(clickedUnit);
-                    // SelectionIndicator indicator = clickedUnit.GetComponent<SelectionIndicator>();
-                    // indicator.IsActive = true;
                 }
             }
         }

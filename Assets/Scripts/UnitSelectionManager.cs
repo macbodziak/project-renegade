@@ -1,4 +1,5 @@
 using System;
+using Navigation;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -40,12 +41,7 @@ public class UnitSelectionManager : MonoBehaviour
             }
         }
 
-        _selectedUnit = unit;
-        indicator = _selectedUnit.GetComponent<SelectionIndicator>();
-        if (indicator != null)
-        {
-            indicator.IsActive = true;
-        }
+        UpdateSelectedUnit(unit);
 
         Debug.Log("SetSelectedUnit -- " + unit.name);
         //TODO - add event trigger
@@ -62,9 +58,19 @@ public class UnitSelectionManager : MonoBehaviour
             }
         }
         _selectedUnit = null;
-
     }
 
+    private void UpdateSelectedUnit(Unit unit)
+    {
+        _selectedUnit = unit;
+        SelectionIndicator indicator = _selectedUnit.GetComponent<SelectionIndicator>();
+        if (indicator != null)
+        {
+            indicator.IsActive = true;
+        }
 
+        WalkableArea wa = _selectedUnit.GetWalkableArea();
+        Pathfinder.DebugDrawArea(LevelManager.Instance.Grid, wa, Color.red, 2f);
+    }
 
 }
