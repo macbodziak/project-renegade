@@ -51,9 +51,18 @@ public class UnitSelectionManager : MonoBehaviour
         //TODO - add event trigger
     }
 
-    public void UnselectUnit()
+    public void CancelSelection()
     {
+        if (_selectedUnit != null)
+        {
+            SelectionIndicator indicator = _selectedUnit.GetComponent<SelectionIndicator>();
+            if (indicator != null)
+            {
+                indicator.IsActive = false;
+            }
+        }
         _selectedUnit = null;
+
     }
 
 

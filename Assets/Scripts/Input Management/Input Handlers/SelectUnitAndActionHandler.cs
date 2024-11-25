@@ -19,6 +19,11 @@ public class SelectUnitAndActionHandler : InputHandler
         {
             OnMouseClicked();
         }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            UnitSelectionManager.Instance.CancelSelection();
+        }
     }
 
 
