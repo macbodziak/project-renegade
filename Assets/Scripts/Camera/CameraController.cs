@@ -1,40 +1,26 @@
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class CameraController : MonoBehaviour
 {
     [SerializeField] float _edgeMargin;
     [SerializeField] float _speed;
     Camera _camera;
+    InputAction moveCameraAction;
     void Start()
     {
         _camera = FindAnyObjectByType<Camera>();
         Debug.Assert(_camera != null);
+        moveCameraAction = InputSystem.actions.FindAction("MoveCamera");
     }
 
 
     void Update()
     {
-        Vector3 mouseTranslation = Vector3.zero;
+        Vector2 moveCameraInput = moveCameraAction.ReadValue<Vector2>();
 
-        if (Input.GetKey(KeyCode.W))
-        {
-            mouseTranslation += Vector3.forward;
-        }
-        if (Input.GetKey(KeyCode.S))
-        {
-            mouseTranslation += Vector3.back;
-        }
-        if (Input.GetKey(KeyCode.A))
-        {
-            mouseTranslation += Vector3.left;
-        }
-        if (Input.GetKey(KeyCode.D))
-        {
-            mouseTranslation += Vector3.right;
-        }
-
-        mouseTranslation *= _speed * Time.deltaTime;
+        Vector3 mouseTranslation = new Vector3(moveCameraInput.x, 0f, moveCameraInput.y) * _speed * Time.deltaTime;
 
         MoveCamera(mouseTranslation);
     }
