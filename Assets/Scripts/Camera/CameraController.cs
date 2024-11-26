@@ -15,25 +15,28 @@ public class CameraController : MonoBehaviour
 
     void Update()
     {
+        Vector3 mouseTranslation = Vector3.zero;
 
-        Vector3 mousePosition = Input.mousePosition;
-        Vector3 translation = Vector3.zero;
+        if (Input.GetKey(KeyCode.W))
+        {
+            mouseTranslation += Vector3.forward;
+        }
+        if (Input.GetKey(KeyCode.S))
+        {
+            mouseTranslation += Vector3.back;
+        }
+        if (Input.GetKey(KeyCode.A))
+        {
+            mouseTranslation += Vector3.left;
+        }
+        if (Input.GetKey(KeyCode.D))
+        {
+            mouseTranslation += Vector3.right;
+        }
 
-        float screenWidth = Screen.width;
-        float screenHeight = Screen.height;
+        mouseTranslation *= _speed * Time.deltaTime;
 
-        // Detect edges
-        if (mousePosition.x <= _edgeMargin)
-            translation += Vector3.left * _speed * Time.deltaTime;
-        else if (mousePosition.x >= screenWidth - _edgeMargin)
-            translation += Vector3.right * _speed * Time.deltaTime;
-
-        if (mousePosition.y <= _edgeMargin)
-            translation += Vector3.back * _speed * Time.deltaTime;
-        else if (mousePosition.y >= screenHeight - _edgeMargin)
-            translation += Vector3.forward * _speed * Time.deltaTime;
-
-        MoveCamera(translation);
+        MoveCamera(mouseTranslation);
     }
 
     private void MoveCamera(Vector3 vector)
