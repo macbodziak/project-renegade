@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6451151839868780461}
   - component: {fileID: 7828577127851808725}
   m_Layer: 0
-  m_Name: Unit Highlight Plane 01
+  m_Name: Player Unit Selection Indicator Mesh 01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
