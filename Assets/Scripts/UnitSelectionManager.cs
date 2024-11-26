@@ -30,9 +30,14 @@ public class UnitSelectionManager : MonoBehaviour
 
     public void SetSelectedUnit(Unit unit)
     {
+        if (unit == _selectedUnit)
+        {
+            return;
+        }
+
         SelectionIndicator indicator;
 
-        if (unit != _selectedUnit && _selectedUnit != null)
+        if (_selectedUnit != null)
         {
             indicator = _selectedUnit.GetComponent<SelectionIndicator>();
             if (indicator != null)
@@ -56,6 +61,7 @@ public class UnitSelectionManager : MonoBehaviour
             {
                 indicator.IsActive = false;
             }
+            LevelManager.Instance.AreaVisualizer.Hide();
         }
         _selectedUnit = null;
     }
@@ -71,6 +77,8 @@ public class UnitSelectionManager : MonoBehaviour
 
         WalkableArea wa = _selectedUnit.GetWalkableArea();
         Pathfinder.DebugDrawArea(LevelManager.Instance.Grid, wa, Color.red, 2f);
+        LevelManager.Instance.AreaVisualizer.UpdateWalkableArea(wa);
+        LevelManager.Instance.AreaVisualizer.Show();
     }
 
 }

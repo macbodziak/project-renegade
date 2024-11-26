@@ -7,7 +7,7 @@ public class MosaicVisualizer : WalkableAreaVisualizer
 {
     [SerializeField]
     [PreviewField, Title("Tile Prefab")]
-    GameObject _tilePrefab;
+    public GameObject _tilePrefab;
 
     [SerializeField]
     List<GameObject> _tiles;
