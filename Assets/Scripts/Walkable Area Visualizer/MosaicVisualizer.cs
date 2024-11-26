@@ -13,13 +13,16 @@ public class MosaicVisualizer : WalkableAreaVisualizer
     List<GameObject> _tiles;
     bool _dirty;
 
-    void Awake()
+    public override void Initialize(float tileSize)
     {
+        _tileSize = tileSize;
         int initialCapacity = 20;
         _tiles = new List<GameObject>(initialCapacity);
         for (int i = 0; i < initialCapacity; i++)
         {
-            _tiles.Add(Instantiate<GameObject>(_tilePrefab, transform));
+            GameObject newTile = Instantiate<GameObject>(_tilePrefab, transform);
+            newTile.transform.localScale *= tileSize;
+            _tiles.Add(newTile);
             _tiles[i].SetActive(false);
         }
 
@@ -75,7 +78,9 @@ public class MosaicVisualizer : WalkableAreaVisualizer
         {
             for (int i = _tiles.Count; i < _area.Count(); i++)
             {
-                _tiles.Add(Instantiate<GameObject>(_tilePrefab, transform));
+                GameObject newTile = Instantiate<GameObject>(_tilePrefab, transform);
+                newTile.transform.localScale *= _tileSize;
+                _tiles.Add(newTile);
             }
         }
         else
@@ -88,4 +93,5 @@ public class MosaicVisualizer : WalkableAreaVisualizer
 
         _dirty = false;
     }
+
 }

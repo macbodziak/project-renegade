@@ -41,5 +41,7 @@ public class LevelManager : MonoBehaviour
             Debug.Log("TO DO - load prefab via addressables");
             Debug.Log("<color=red> NO WALKABLE AREA VISUALIZER </color>");
         }
+
+        _areaVisualizer.Initialize(_grid.TileSize);
     }
 }
