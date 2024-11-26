@@ -4,7 +4,6 @@ using UnityEngine.InputSystem;
 
 public class CameraController : MonoBehaviour
 {
-    [SerializeField] float _edgeMargin;
     [SerializeField] float _speed;
     Camera _camera;
     InputAction moveCameraAction;
@@ -18,9 +17,9 @@ public class CameraController : MonoBehaviour
 
     void Update()
     {
-        Vector2 moveCameraInput = moveCameraAction.ReadValue<Vector2>();
+        Vector2 moveCameraValue = moveCameraAction.ReadValue<Vector2>();
 
-        Vector3 mouseTranslation = new Vector3(moveCameraInput.x, 0f, moveCameraInput.y) * _speed * Time.deltaTime;
+        Vector3 mouseTranslation = new Vector3(moveCameraValue.x, 0f, moveCameraValue.y) * _speed * Time.deltaTime;
 
         MoveCamera(mouseTranslation);
     }
