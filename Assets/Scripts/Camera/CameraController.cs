@@ -1,32 +1,37 @@
 using System;
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class CameraController : MonoBehaviour
 {
-    [SerializeField] float _speed;
-    Camera _camera;
-    InputAction moveCameraAction;
+    [SerializeField] float _linearSpeed = 1;
+    [SerializeField] float _rotationalSpeed = 30;
+    InputAction translateCameraAction;
+    InputAction rotateCameraAction;
+    InputAction zoomCameraAction;
+
     void Start()
     {
-        _camera = FindAnyObjectByType<Camera>();
-        Debug.Assert(_camera != null);
-        moveCameraAction = InputSystem.actions.FindAction("MoveCamera");
+        translateCameraAction = InputSystem.actions.FindAction("MoveCamera");
+        rotateCameraAction = InputSystem.actions.FindAction("RotateCamera");
+
+#if DEBUG
+        Debug.Assert(translateCameraAction != null);
+        Debug.Assert(rotateCameraAction != null);
+#endif
     }
 
 
     void Update()
     {
-        Vector2 moveCameraValue = moveCameraAction.ReadValue<Vector2>();
+        Vector2 linearDelta = translateCameraAction.ReadValue<Vector2>();
+        float rotationalDelta = rotateCameraAction.ReadValue<float>();
 
-        Vector3 mouseTranslation = new Vector3(moveCameraValue.x, 0f, moveCameraValue.y) * _speed * Time.deltaTime;
+        Vector3 mouseTranslation = new Vector3(linearDelta.x, 0f, linearDelta.y) * _linearSpeed * Time.deltaTime;
 
-        MoveCamera(mouseTranslation);
-    }
-
-    private void MoveCamera(Vector3 vector)
-    {
-        _camera.transform.Translate(vector, Space.World);
+        gameObject.transform.Translate(mouseTranslation, Space.Self);
+        gameObject.transform.Rotate(0f, rotationalDelta * _rotationalSpeed * Time.deltaTime, 0f);
     }
 }
 
