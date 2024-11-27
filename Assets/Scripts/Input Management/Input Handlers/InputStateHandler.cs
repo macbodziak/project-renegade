@@ -1,11 +1,11 @@
 using UnityEngine;
 
-public abstract class InputHandler
+public abstract class InputStateHandler
 {
     protected LayerMask _unitLayerMask;
     protected GameObject _objectUnderCursor;
 
-    protected InputHandler(LayerMask unitLayerMask)
+    protected InputStateHandler(LayerMask unitLayerMask)
     {
         _unitLayerMask = unitLayerMask;
     }

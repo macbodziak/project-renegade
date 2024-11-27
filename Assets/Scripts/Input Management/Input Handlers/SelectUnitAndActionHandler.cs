@@ -2,7 +2,7 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 
-public class SelectUnitAndActionHandler : InputHandler
+public class SelectUnitAndActionHandler : InputStateHandler
 {
     public SelectUnitAndActionHandler(LayerMask unitLayerMask) : base(unitLayerMask)
     {

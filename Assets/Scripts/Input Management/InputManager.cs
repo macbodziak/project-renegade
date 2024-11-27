@@ -8,7 +8,7 @@ public class InputManager : MonoBehaviour
     [SerializeField] LayerMask _unitLayerMask;
     private static InputManager _instance;
     public event EventHandler InputStateChangedEvent;
-    private InputHandler _currentInputHandler;
+    private InputStateHandler _currentInputHandler;
     private InputState _currentState;
     private InputState _nextState;
     private bool _isStateChangeRequested;
@@ -20,7 +20,7 @@ public class InputManager : MonoBehaviour
 
     // this array of input hanlders must be the same as the order of enums in InputState
     // there has to be an input state class created for derived from BaseInputState
-    private List<InputHandler> inputHandlers;
+    private List<InputStateHandler> inputHandlers;
 
     public static InputManager Instance { get { return _instance; } }
     private void Awake()
