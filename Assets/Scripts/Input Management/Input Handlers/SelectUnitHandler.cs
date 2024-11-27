@@ -2,9 +2,9 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 
-public class SelectUnitAndActionHandler : InputStateHandler
+public class SelectUnitHandler : InputStateHandler
 {
-    public SelectUnitAndActionHandler(LayerMask unitLayerMask) : base(unitLayerMask)
+    public SelectUnitHandler(LayerMask unitLayerMask) : base(unitLayerMask)
     {
     }
 

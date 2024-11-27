@@ -83,7 +83,7 @@ public class InputManager : MonoBehaviour
     {
         inputHandlers = new()
         {
-            new SelectUnitAndActionHandler(_unitLayerMask)
+            new SelectUnitHandler(_unitLayerMask)
         };
     }
 
