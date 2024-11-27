@@ -10785,13 +10785,13 @@ MonoBehaviour:
   - {x: 38.5, y: 0, z: 33.77499}
   - {x: 39.5, y: 0, z: 33.77499}
   actors:
-    keys: 6901000054000000
+    keys: 5400000069010000
     values:
-    - {fileID: 694833904}
     - {fileID: 897774960}
+    - {fileID: 694833904}
   showTileOutlineFlag: 1
   showTileCenterFlag: 0
-  showTileInfoTextFlag: 1
+  showTileInfoTextFlag: 0
   ShowNodeGridCoordinatesTextFlag: 1
   ShowNodeWalkableTextFlag: 0
   ShowNodeMovementCostTextFlag: 0
@@ -11491,6 +11491,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _linearSpeed: 5
   _rotationalSpeed: 22
+  _bounds:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
 --- !u!1 &1805249419
 GameObject:
   m_ObjectHideFlags: 0
@@ -11804,7 +11807,7 @@ MonoBehaviour:
   TargetOffset: {x: 0, y: 0, z: 0}
   TrackerSettings:
     BindingMode: 3
-    PositionDamping: {x: 0, y: 0, z: 0}
+    PositionDamping: {x: 0.1, y: 0.1, z: 0.1}
     AngularDampingMode: 0
     RotationDamping: {x: 0.6, y: 0.6, z: 0.6}
     QuaternionDamping: 1
