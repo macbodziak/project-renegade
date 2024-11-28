@@ -1,5 +1,6 @@
 public enum InputState
 {
-    SelectUnitAndAction,
+    SelectUnit,
+    SelectMovementTarget,
     None
 }

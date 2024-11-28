@@ -10,9 +10,9 @@ public class SelectUnitHandler : InputStateHandler
 
     public override void HandleInput()
     {
-        GameObject hitObject = RaycastToGameObject();
+        UpdateRaycastHit();
+        ScanObjectUnderCursor();
 
-        SetObjectUnderCursor(hitObject);
         if (Input.GetMouseButtonDown(0))
         {
             OnMouseClicked();
@@ -20,45 +20,22 @@ public class SelectUnitHandler : InputStateHandler
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            UnitSelectionManager.Instance.CancelSelection();
+            OnCancel();
         }
     }
 
 
     private void OnMouseClicked()
     {
-        if (_objectUnderCursor != null)
+        if (_currentlyHitObject != null)
         {
-            Unit clickedUnit = _objectUnderCursor.GetComponent<Unit>();
+            Unit clickedUnit = _currentHit.collider.gameObject.GetComponent<Unit>();
             if (clickedUnit != null)
             {
                 if (clickedUnit.IsPlayer)
                 {
-                    UnitSelectionManager.Instance.SetSelectedUnit(clickedUnit);
+                    OnPlayerUnitClicked(clickedUnit);
                 }
-            }
-        }
-    }
-
-    protected override void OnSwitchObjectUnderCursor(GameObject previous, GameObject current)
-    {
-        Unit unit = previous.GetComponent<Unit>();
-        if (unit != null)
-        {
-            if (unit.IsPlayer)
-            {
-                SelectionIndicator indicator = unit.GetComponent<SelectionIndicator>();
-                indicator.IsReviewed = false;
-            }
-        }
-
-        unit = current.GetComponent<Unit>();
-        if (unit != null)
-        {
-            if (unit.IsPlayer)
-            {
-                SelectionIndicator indicator = unit.GetComponent<SelectionIndicator>();
-                indicator.IsReviewed = true;
             }
         }
     }
@@ -66,23 +43,31 @@ public class SelectUnitHandler : InputStateHandler
     protected override void OnMouseEnterObject(GameObject gameObject)
     {
         Unit unit = gameObject.GetComponent<Unit>();
-        if (unit != null)
+
+        if (unit != null && unit.IsPlayer)
         {
-            if (unit.IsPlayer)
-            {
-                SelectionIndicator indicator = unit.GetComponent<SelectionIndicator>();
-                indicator.IsReviewed = true;
-            }
+            SelectionIndicator indicator = unit.GetComponent<SelectionIndicator>();
+            indicator.IsReviewed = true;
         }
     }
 
     protected override void OnMouseExitObject(GameObject gameObject)
     {
         Unit unit = gameObject.GetComponent<Unit>();
-        if (unit.IsPlayer)
+        if (unit != null && unit.IsPlayer)
         {
             SelectionIndicator indicator = unit.GetComponent<SelectionIndicator>();
             indicator.IsReviewed = false;
         }
+    }
+
+    private void OnPlayerUnitClicked(Unit unit)
+    {
+        UnitSelectionManager.Instance.SetSelectedUnit(unit);
+    }
+
+    private void OnCancel()
+    {
+        UnitSelectionManager.Instance.CancelSelection();
     }
 }

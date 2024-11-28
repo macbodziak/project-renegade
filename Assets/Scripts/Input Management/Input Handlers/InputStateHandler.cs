@@ -2,26 +2,27 @@ using UnityEngine;
 
 public abstract class InputStateHandler
 {
-    protected LayerMask _unitLayerMask;
-    protected GameObject _objectUnderCursor;
+    protected LayerMask _layerMask;
+    protected RaycastHit _currentHit;
+    protected RaycastHit _previousHit;
+    protected GameObject _previouslyHitObject;
+    protected GameObject _currentlyHitObject;
+
 
     protected InputStateHandler(LayerMask unitLayerMask)
     {
-        _unitLayerMask = unitLayerMask;
+        _layerMask = unitLayerMask;
     }
 
-    protected GameObject RaycastToGameObject()
+
+    protected void UpdateRaycastHit()
     {
-        RaycastHit hit;
+        _previousHit = _currentHit;
+        _previouslyHitObject = _currentlyHitObject;
+
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-        Physics.Raycast(ray, out hit, Mathf.Infinity, _unitLayerMask);
-
-        if (hit.collider == null)
-        {
-            return null;
-        }
-        return hit.collider.gameObject;
+        Physics.Raycast(ray, out _currentHit, Mathf.Infinity, _layerMask);
+        _currentlyHitObject = _currentHit.collider == null ? null : _currentHit.collider.gameObject;
     }
 
     public abstract void HandleInput();
@@ -32,41 +33,37 @@ public abstract class InputStateHandler
 
     public virtual void OnExit() {; }
 
-    protected void SetObjectUnderCursor(GameObject gameObject)
+    protected void ScanObjectUnderCursor()
     {
-        if (_objectUnderCursor == gameObject)
+
+        if (_currentlyHitObject != null && _currentlyHitObject == _previouslyHitObject)
         {
-            return;
+            OnMouseStayOverObject(_currentlyHitObject);
         }
 
-        if (gameObject == null && _objectUnderCursor != null)
+        if (_currentlyHitObject != _previouslyHitObject)
         {
-            OnMouseExitObject(_objectUnderCursor);
-            _objectUnderCursor = null;
-        }
-
-        if (gameObject != null && _objectUnderCursor == null)
-        {
-            _objectUnderCursor = gameObject;
-            OnMouseEnterObject(_objectUnderCursor);
-        }
-
-        if (gameObject != null && _objectUnderCursor != gameObject)
-        {
-            OnSwitchObjectUnderCursor(_objectUnderCursor, gameObject);
-            _objectUnderCursor = gameObject;
+            if (_previouslyHitObject != null)
+            {
+                OnMouseExitObject(_previouslyHitObject);
+            }
+            if (_currentlyHitObject != null)
+            {
+                OnMouseEnterObject(_currentlyHitObject);
+            }
         }
     }
 
-    protected virtual void OnSwitchObjectUnderCursor(GameObject previous, GameObject current)
-    {
-    }
 
     protected virtual void OnMouseEnterObject(GameObject gameObject)
     {
     }
 
     protected virtual void OnMouseExitObject(GameObject gameObject)
+    {
+    }
+
+    protected virtual void OnMouseStayOverObject(GameObject gameObject)
     {
     }
 

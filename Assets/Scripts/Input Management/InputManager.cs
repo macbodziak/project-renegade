@@ -6,9 +6,10 @@ using System.Collections.Generic;
 public class InputManager : MonoBehaviour
 {
     [SerializeField] LayerMask _unitLayerMask;
+    [SerializeField] LayerMask _unitGridLayerMask;
     private static InputManager _instance;
     public event EventHandler InputStateChangedEvent;
-    private InputStateHandler _currentInputHandler;
+    private InputStateHandler _currentInputStateHandler;
     private InputState _currentState;
     private InputState _nextState;
     private bool _isStateChangeRequested;
@@ -39,7 +40,7 @@ public class InputManager : MonoBehaviour
 
     private void Update()
     {
-        _currentInputHandler.HandleInput();
+        _currentInputStateHandler.HandleInput();
 
         if (_isStateChangeRequested)
         {
@@ -54,11 +55,11 @@ public class InputManager : MonoBehaviour
     // should not be called form outside of this class
     private void TransitionInputState()
     {
-        _currentInputHandler.OnExit();
+        _currentInputStateHandler.OnExit();
         _currentState = _nextState;
-        _currentInputHandler = inputHandlers[(int)_nextState];
+        _currentInputStateHandler = inputHandlers[(int)_nextState];
         _nextState = InputState.None;
-        _currentInputHandler.OnEnter();
+        _currentInputStateHandler.OnEnter();
         _isStateChangeRequested = false;
         InputStateChangedEvent?.Invoke(this, EventArgs.Empty);
     }
@@ -83,7 +84,8 @@ public class InputManager : MonoBehaviour
     {
         inputHandlers = new()
         {
-            new SelectUnitHandler(_unitLayerMask)
+            new SelectUnitHandler(_unitLayerMask),
+            new SelectMovementTargetHandler(_unitGridLayerMask)
         };
     }
 
@@ -92,9 +94,16 @@ public class InputManager : MonoBehaviour
     {
         //state related variables
         _isStateChangeRequested = false;
-        _currentState = InputState.SelectUnitAndAction;
+        _currentState = InputState.SelectUnit;
         _nextState = InputState.None;
-        _currentInputHandler = inputHandlers[(int)_currentState];
+        _currentInputStateHandler = inputHandlers[(int)_currentState];
     }
+
+#if UNITY_EDITOR
+    void OnGUI()
+    {
+        GUI.Label(new Rect(25, 25, 200, 30), $"{_currentInputStateHandler}");
+    }
+#endif
 }
 
