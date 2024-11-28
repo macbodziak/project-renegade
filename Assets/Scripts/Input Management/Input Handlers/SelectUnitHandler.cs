@@ -67,11 +67,11 @@ public class SelectUnitHandler : InputStateHandler
 
     private void OnPlayerUnitClicked(Unit unit)
     {
-        UnitSelectionManager.Instance.SetSelectedUnit(unit);
+        PlayerActionManager.Instance.SetSelectedUnit(unit);
     }
 
     private void OnCancel()
     {
-        UnitSelectionManager.Instance.CancelSelection();
+        PlayerActionManager.Instance.CancelSelection();
     }
 }

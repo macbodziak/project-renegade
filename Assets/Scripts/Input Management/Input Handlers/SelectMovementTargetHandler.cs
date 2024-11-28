@@ -119,12 +119,12 @@ public class SelectMovementTargetHandler : InputStateHandler
 
     private void OnPlayerUnitClicked(Unit unit)
     {
-        UnitSelectionManager.Instance.SetSelectedUnit(unit);
+        PlayerActionManager.Instance.SetSelectedUnit(unit);
     }
 
     private void OnCancel()
     {
-        UnitSelectionManager.Instance.CancelSelection();
+        PlayerActionManager.Instance.CancelSelection();
     }
 
     private void OnGridClicked(NavGrid grid)
@@ -133,7 +133,7 @@ public class SelectMovementTargetHandler : InputStateHandler
         Vector2 gridCoord = grid.GridCoordinatesAt(_currentHit.point);
         Vector3 worldPosition = _currentHit.point;
         Debug.Log($"clicked Grid at world position:<color=<color=#c78bff> > {worldPosition} , -> {gridCoord}</color>");
-        Actor actor = UnitSelectionManager.Instance.SelectedUnit.gameObject.GetComponent<Actor>();
+        Actor actor = PlayerActionManager.Instance.SelectedUnit.gameObject.GetComponent<Actor>();
         if (actor != null)
         {
             Path path = Pathfinder.FindPath(LevelManager.Instance.Grid, actor.NodeIndex, nodeId);

@@ -1,38 +1,28 @@
-using UnityEngine;
 using System;
-using UnityEditor;
-using System.Collections.Generic;
+using Navigation;
+using Unity.VisualScripting;
+using UnityEngine;
 
-public class InputManager : MonoBehaviour
+public class PlayerActionManager : MonoBehaviour
 {
-    public enum State
-    {
-        SelectUnit,
-        SelectMovementTarget,
-        None
-    }
-
     [SerializeField]
-    [Tooltip("Layer Mask used by Input State Handlers that need to detect both units and grid")]
-    LayerMask _inputLayerMask;
-    // [SerializeField] ;
-    private static InputManager _instance;
-    public event EventHandler InputStateChangedEvent;
-    private InputStateHandler _currentInputStateHandler;
-    private State _currentState;
-    private State _nextState;
-    private bool _isStateChangeRequested;
+    Unit _selectedUnit;
 
-    public State CurrentState
+    private static PlayerActionManager _instance;
+    public static PlayerActionManager Instance { get { return _instance; } }
+    public Unit SelectedUnit { get => _selectedUnit; }
+    public int SelecterUnitNodeIndex
     {
-        get { return _currentState; }
+        get
+        {
+            if (_selectedUnit == null)
+            {
+                return -1;
+            }
+            return _selectedUnit.GetComponent<Actor>().NodeIndex;
+        }
     }
 
-    // this array of input hanlders must be the same as the order of enums in InputState
-    // there has to be an input state class created for derived from BaseInputState
-    private List<InputStateHandler> inputHandlers;
-
-    public static InputManager Instance { get { return _instance; } }
     private void Awake()
     {
         if (_instance != null && _instance != this)
@@ -42,77 +32,67 @@ public class InputManager : MonoBehaviour
         else
         {
             _instance = this;
-            InitializeInputHanlders();
             InitializationStateOnAwake();
         }
     }
 
-    private void Update()
+    private void InitializationStateOnAwake()
     {
-        _currentInputStateHandler.HandleInput();
-
-        if (_isStateChangeRequested)
-        {
-            TransitionInputState();
-        }
+        _selectedUnit = null;
     }
 
-    //
-    // Summary:
-    // This funtion handles the transition, but setting the state to be transitioned is done 
-    // via SetState(State state).
-    // should not be called form outside of this class
-    private void TransitionInputState()
+    public void SetSelectedUnit(Unit unit)
     {
-        _currentInputStateHandler.OnExit();
-        _currentState = _nextState;
-        _currentInputStateHandler = inputHandlers[(int)_nextState];
-        _nextState = State.None;
-        _currentInputStateHandler.OnEnter();
-        _isStateChangeRequested = false;
-        InputStateChangedEvent?.Invoke(this, EventArgs.Empty);
-    }
-
-    //
-    // Summary:
-    // Set the state to be transitioned to. The actual transition happen in TransitionInputState()
-    // at the end of Update(), after finishing handling input form previous state
-    // This method should be called from outside this class to request a state change
-    public void SetState(State state)
-    {
-        if (state == _currentState)
+        if (unit == _selectedUnit)
         {
             return;
         }
-        _nextState = state;
-        _isStateChangeRequested = true;
-    }
 
+        SelectionIndicator indicator;
 
-    private void InitializeInputHanlders()
-    {
-        inputHandlers = new()
+        if (_selectedUnit != null)
         {
-            new SelectUnitHandler(_inputLayerMask),
-            new SelectMovementTargetHandler(_inputLayerMask)
-        };
+            indicator = _selectedUnit.GetComponent<SelectionIndicator>();
+            if (indicator != null)
+            {
+                indicator.IsActive = false;
+            }
+        }
+
+        UpdateSelectedUnit(unit);
+
+        Debug.Log("SetSelectedUnit -- " + unit.name);
+        //TODO - add event trigger
     }
 
 
-    private void InitializationStateOnAwake()
+    public void CancelSelection()
     {
-        //state related variables
-        _isStateChangeRequested = false;
-        _currentState = State.SelectUnit;
-        _nextState = State.None;
-        _currentInputStateHandler = inputHandlers[(int)_currentState];
+        if (_selectedUnit != null)
+        {
+            SelectionIndicator indicator = _selectedUnit.GetComponent<SelectionIndicator>();
+            if (indicator != null)
+            {
+                indicator.IsActive = false;
+            }
+            LevelManager.Instance.HideWalkableArea();
+            InputManager.Instance.SetState(InputManager.State.SelectUnit);
+        }
+        _selectedUnit = null;
     }
 
-#if UNITY_EDITOR
-    void OnGUI()
+    private void UpdateSelectedUnit(Unit unit)
     {
-        GUI.Label(new Rect(25, 25, 200, 30), $"{_currentInputStateHandler}");
+        _selectedUnit = unit;
+        SelectionIndicator indicator = _selectedUnit.GetComponent<SelectionIndicator>();
+        if (indicator != null)
+        {
+            indicator.IsActive = true;
+        }
+
+        InputManager.Instance.SetState(InputManager.State.SelectMovementTarget);
+        WalkableArea wa = _selectedUnit.GetWalkableArea();
+        LevelManager.Instance.ShowWalkableArea(wa);
     }
-#endif
+
 }
-
