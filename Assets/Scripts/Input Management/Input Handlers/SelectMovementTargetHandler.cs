@@ -13,14 +13,20 @@ public class SelectMovementTargetHandler : InputStateHandler
         ScanObjectUnderCursor();
 
 
-        if (Input.GetMouseButtonDown(0))
+        if (selectAction.WasPerformedThisFrame())
         {
+            Debug.Log("CLICK!!! at frame " + Time.frameCount);
             OnMouseClicked();
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (cancelAction.WasPerformedThisFrame())
         {
             OnCancel();
+        }
+
+        if (selectFocusAction.WasPerformedThisFrame())
+        {
+            OnMouseDoubleClicked();
         }
     }
 
@@ -47,6 +53,23 @@ public class SelectMovementTargetHandler : InputStateHandler
             OnGridClicked(grid);
         }
 
+    }
+
+    private void OnMouseDoubleClicked()
+    {
+        if (_currentlyHitObject == null)
+        {
+            return;
+        }
+
+        Unit clickedUnit = _currentlyHitObject.GetComponent<Unit>();
+        if (clickedUnit != null)
+        {
+            if (clickedUnit.IsPlayer)
+            {
+                LevelManager.Instance.CamController.Teleport(clickedUnit.transform.position);
+            }
+        }
     }
 
 

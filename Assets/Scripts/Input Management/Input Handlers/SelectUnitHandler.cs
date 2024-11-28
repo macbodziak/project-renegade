@@ -1,6 +1,5 @@
 using UnityEngine;
-using System;
-using System.Collections.Generic;
+using UnityEngine.InputSystem;
 
 public class SelectUnitHandler : InputStateHandler
 {
@@ -13,12 +12,12 @@ public class SelectUnitHandler : InputStateHandler
         UpdateRaycastHit();
         ScanObjectUnderCursor();
 
-        if (Input.GetMouseButtonDown(0))
+        if (selectAction.WasPerformedThisFrame())
         {
             OnMouseClicked();
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (cancelAction.WasPerformedThisFrame())
         {
             OnCancel();
         }
@@ -35,6 +34,11 @@ public class SelectUnitHandler : InputStateHandler
                 if (clickedUnit.IsPlayer)
                 {
                     OnPlayerUnitClicked(clickedUnit);
+                }
+
+                if (selectFocusAction.WasPerformedThisFrame())
+                {
+                    LevelManager.Instance.CamController.Teleport(clickedUnit.transform.position);
                 }
             }
         }

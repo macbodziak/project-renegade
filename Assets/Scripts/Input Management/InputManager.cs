@@ -12,9 +12,10 @@ public class InputManager : MonoBehaviour
         None
     }
 
-
-    [SerializeField] LayerMask _unitLayerMask;
-    [SerializeField] LayerMask _unitGridLayerMask;
+    [SerializeField]
+    [Tooltip("Layer Mask used by Input State Handlers that need to detect both units and grid")]
+    LayerMask _inputLayerMask;
+    // [SerializeField] ;
     private static InputManager _instance;
     public event EventHandler InputStateChangedEvent;
     private InputStateHandler _currentInputStateHandler;
@@ -92,8 +93,8 @@ public class InputManager : MonoBehaviour
     {
         inputHandlers = new()
         {
-            new SelectUnitHandler(_unitLayerMask),
-            new SelectMovementTargetHandler(_unitGridLayerMask)
+            new SelectUnitHandler(_inputLayerMask),
+            new SelectMovementTargetHandler(_inputLayerMask)
         };
     }
 

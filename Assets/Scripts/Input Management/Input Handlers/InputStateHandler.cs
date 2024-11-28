@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public abstract class InputStateHandler
 {
@@ -7,11 +8,23 @@ public abstract class InputStateHandler
     protected RaycastHit _previousHit;
     protected GameObject _previouslyHitObject;
     protected GameObject _currentlyHitObject;
+    protected InputAction selectAction;
+    protected InputAction selectFocusAction;
+    protected InputAction cancelAction;
 
-
-    protected InputStateHandler(LayerMask unitLayerMask)
+    protected InputStateHandler(LayerMask layerMask)
     {
-        _layerMask = unitLayerMask;
+        _layerMask = layerMask;
+
+        selectAction = InputSystem.actions.FindAction("Select");
+        selectFocusAction = InputSystem.actions.FindAction("SelectAndFocus");
+        cancelAction = InputSystem.actions.FindAction("Cancel");
+
+#if DEBUG
+        Debug.Assert(selectAction != null);
+        Debug.Assert(cancelAction != null);
+        Debug.Assert(selectFocusAction != null);
+#endif
     }
 
 

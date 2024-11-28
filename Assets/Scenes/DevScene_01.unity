@@ -1339,7 +1339,7 @@ Transform:
   m_GameObject: {fileID: 694833902}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.5, y: 0, z: 7.7942286}
+  m_LocalPosition: {x: 11, y: 0, z: 12.124355}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1359,7 +1359,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _grid: {fileID: 1265778456}
-  _currentNodeIndex: 361
+  _currentNodeIndex: 571
   _speed: 4
   _speedModifier: 1
   _rotationSpeed: 6
@@ -1696,10 +1696,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bc69184a997c1043bda8bb952003160, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _unitLayerMask:
-    serializedVersion: 2
-    m_Bits: 256
-  _unitGridLayerMask:
+  _inputLayerMask:
     serializedVersion: 2
     m_Bits: 320
 --- !u!114 &762656928
@@ -1715,6 +1712,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _areaVisualizer: {fileID: 270487016}
+  _camController: {fileID: 1771965376}
 --- !u!1 &782121236
 GameObject:
   m_ObjectHideFlags: 0
@@ -2119,7 +2117,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _grid: {fileID: 1265778456}
-  _currentNodeIndex: 84
+  _currentNodeIndex: 83
   _speed: 4
   _speedModifier: 1
   _rotationSpeed: 6
@@ -2184,7 +2182,7 @@ Transform:
   m_GameObject: {fileID: 897774959}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4, y: 0, z: 1.7320508}
+  m_LocalPosition: {x: 3, y: 0, z: 1.7320508}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -10788,7 +10786,7 @@ MonoBehaviour:
   - {x: 38.5, y: 0, z: 33.77499}
   - {x: 39.5, y: 0, z: 33.77499}
   actors:
-    keys: 5400000069010000
+    keys: 530000003b020000
     values:
     - {fileID: 897774960}
     - {fileID: 694833904}
@@ -11495,7 +11493,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _linearSpeed: 5
   _rotationalSpeed: 22
-  _teleportSpeed: 2
+  _teleportSpeed: 5
   _inputAxisController: {fileID: 2067158416}
 --- !u!1 &1805249419
 GameObject:

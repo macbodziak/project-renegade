@@ -52,6 +52,7 @@ public class UnitSelectionManager : MonoBehaviour
         //TODO - add event trigger
     }
 
+
     public void CancelSelection()
     {
         if (_selectedUnit != null)
@@ -78,7 +79,6 @@ public class UnitSelectionManager : MonoBehaviour
 
         InputManager.Instance.SetState(InputManager.State.SelectMovementTarget);
         WalkableArea wa = _selectedUnit.GetWalkableArea();
-        Pathfinder.DebugDrawArea(LevelManager.Instance.Grid, wa, Color.red, 2f);
         LevelManager.Instance.AreaVisualizer.UpdateWalkableArea(wa);
         LevelManager.Instance.AreaVisualizer.Show();
     }
