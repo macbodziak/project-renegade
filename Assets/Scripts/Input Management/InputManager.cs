@@ -5,16 +5,24 @@ using System.Collections.Generic;
 
 public class InputManager : MonoBehaviour
 {
+    public enum State
+    {
+        SelectUnit,
+        SelectMovementTarget,
+        None
+    }
+
+
     [SerializeField] LayerMask _unitLayerMask;
     [SerializeField] LayerMask _unitGridLayerMask;
     private static InputManager _instance;
     public event EventHandler InputStateChangedEvent;
     private InputStateHandler _currentInputStateHandler;
-    private InputState _currentState;
-    private InputState _nextState;
+    private State _currentState;
+    private State _nextState;
     private bool _isStateChangeRequested;
 
-    public InputState CurrentState
+    public State CurrentState
     {
         get { return _currentState; }
     }
@@ -58,7 +66,7 @@ public class InputManager : MonoBehaviour
         _currentInputStateHandler.OnExit();
         _currentState = _nextState;
         _currentInputStateHandler = inputHandlers[(int)_nextState];
-        _nextState = InputState.None;
+        _nextState = State.None;
         _currentInputStateHandler.OnEnter();
         _isStateChangeRequested = false;
         InputStateChangedEvent?.Invoke(this, EventArgs.Empty);
@@ -69,7 +77,7 @@ public class InputManager : MonoBehaviour
     // Set the state to be transitioned to. The actual transition happen in TransitionInputState()
     // at the end of Update(), after finishing handling input form previous state
     // This method should be called from outside this class to request a state change
-    public void SetState(InputState state)
+    public void SetState(State state)
     {
         if (state == _currentState)
         {
@@ -94,8 +102,8 @@ public class InputManager : MonoBehaviour
     {
         //state related variables
         _isStateChangeRequested = false;
-        _currentState = InputState.SelectUnit;
-        _nextState = InputState.None;
+        _currentState = State.SelectUnit;
+        _nextState = State.None;
         _currentInputStateHandler = inputHandlers[(int)_currentState];
     }
 

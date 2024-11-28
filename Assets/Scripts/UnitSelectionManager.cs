@@ -62,7 +62,7 @@ public class UnitSelectionManager : MonoBehaviour
                 indicator.IsActive = false;
             }
             LevelManager.Instance.AreaVisualizer.Hide();
-            InputManager.Instance.SetState(InputState.SelectUnit);
+            InputManager.Instance.SetState(InputManager.State.SelectUnit);
         }
         _selectedUnit = null;
     }
@@ -76,7 +76,7 @@ public class UnitSelectionManager : MonoBehaviour
             indicator.IsActive = true;
         }
 
-        InputManager.Instance.SetState(InputState.SelectMovementTarget);
+        InputManager.Instance.SetState(InputManager.State.SelectMovementTarget);
         WalkableArea wa = _selectedUnit.GetWalkableArea();
         Pathfinder.DebugDrawArea(LevelManager.Instance.Grid, wa, Color.red, 2f);
         LevelManager.Instance.AreaVisualizer.UpdateWalkableArea(wa);
