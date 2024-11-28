@@ -75,7 +75,7 @@ public class UnitSelectionManager : MonoBehaviour
             {
                 indicator.IsActive = false;
             }
-            LevelManager.Instance.AreaVisualizer.Hide();
+            LevelManager.Instance.HideWalkableArea();
             InputManager.Instance.SetState(InputManager.State.SelectUnit);
         }
         _selectedUnit = null;
@@ -92,8 +92,7 @@ public class UnitSelectionManager : MonoBehaviour
 
         InputManager.Instance.SetState(InputManager.State.SelectMovementTarget);
         WalkableArea wa = _selectedUnit.GetWalkableArea();
-        LevelManager.Instance.AreaVisualizer.UpdateWalkableArea(wa);
-        LevelManager.Instance.AreaVisualizer.Show();
+        LevelManager.Instance.ShowWalkableArea(wa);
     }
 
 }

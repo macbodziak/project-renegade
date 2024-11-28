@@ -19,7 +19,6 @@ public class LevelManager : MonoBehaviour
     public CameraController CamController { get => _camController; }
 
     public NavGrid Grid { get => _grid; }
-    public WalkableAreaVisualizer AreaVisualizer { get => _areaVisualizer; }
 
     private void Awake()
     {
@@ -61,5 +60,16 @@ public class LevelManager : MonoBehaviour
     public void HidePathReview()
     {
         _pathVisualizer.Hide();
+    }
+
+    public void ShowWalkableArea(WalkableArea area)
+    {
+        _areaVisualizer.UpdateWalkableArea(area);
+        _areaVisualizer.Show();
+    }
+
+    public void HideWalkableArea()
+    {
+        _areaVisualizer.Hide();
     }
 }
