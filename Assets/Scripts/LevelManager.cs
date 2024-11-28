@@ -57,7 +57,7 @@ public class LevelManager : MonoBehaviour
         _pathVisualizer.Show();
     }
 
-    public void HidePathReview()
+    public void HidePathPreview()
     {
         _pathVisualizer.Hide();
     }

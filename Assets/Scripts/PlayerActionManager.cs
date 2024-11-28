@@ -11,7 +11,7 @@ public class PlayerActionManager : MonoBehaviour
     private static PlayerActionManager _instance;
     public static PlayerActionManager Instance { get { return _instance; } }
     public Unit SelectedUnit { get => _selectedUnit; }
-    public int SelecterUnitNodeIndex
+    public int SelectedUnitNodeIndex
     {
         get
         {

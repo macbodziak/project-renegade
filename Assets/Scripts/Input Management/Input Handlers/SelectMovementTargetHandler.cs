@@ -3,8 +3,20 @@ using UnityEngine;
 
 public class SelectMovementTargetHandler : InputStateHandler
 {
+    int _previousNodeId;
+
     public SelectMovementTargetHandler(LayerMask unitLayerMask) : base(unitLayerMask)
     {
+    }
+
+    public override void OnEnter()
+    {
+        _previousNodeId = -1;
+    }
+
+    public override void OnExit()
+    {
+        LevelManager.Instance.HidePathPreview();
     }
 
     public override void HandleInput()
@@ -15,7 +27,6 @@ public class SelectMovementTargetHandler : InputStateHandler
 
         if (selectAction.WasPerformedThisFrame())
         {
-            Debug.Log("CLICK!!! at frame " + Time.frameCount);
             OnMouseClicked();
         }
 
@@ -120,6 +131,7 @@ public class SelectMovementTargetHandler : InputStateHandler
     private void OnPlayerUnitClicked(Unit unit)
     {
         PlayerActionManager.Instance.SetSelectedUnit(unit);
+        LevelManager.Instance.HidePathPreview();
     }
 
     private void OnCancel()
@@ -130,15 +142,28 @@ public class SelectMovementTargetHandler : InputStateHandler
     private void OnGridClicked(NavGrid grid)
     {
         int nodeId = grid.IndexAt(_currentHit.point);
-        Vector2 gridCoord = grid.GridCoordinatesAt(_currentHit.point);
-        Vector3 worldPosition = _currentHit.point;
-        Debug.Log($"clicked Grid at world position:<color=<color=#c78bff> > {worldPosition} , -> {gridCoord}</color>");
-        Actor actor = PlayerActionManager.Instance.SelectedUnit.gameObject.GetComponent<Actor>();
-        if (actor != null)
+
+        WalkableArea area = PlayerActionManager.Instance.SelectedUnit.GetWalkableArea();
+
+        if (area.ContainsNode(nodeId))
         {
-            Path path = Pathfinder.FindPath(LevelManager.Instance.Grid, actor.NodeIndex, nodeId);
-            LevelManager.Instance.ShowPathPreview(path);
+            if (_previousNodeId == nodeId)
+            {
+                Debug.Log($"<color=#819470>Trigger task execution</color>");
+                LevelManager.Instance.HidePathPreview();
+            }
+            else
+            {
+                Actor actor = PlayerActionManager.Instance.SelectedUnit.gameObject.GetComponent<Actor>();
+                if (actor != null)
+                {
+                    Path path = Pathfinder.FindPath(LevelManager.Instance.Grid, actor.NodeIndex, nodeId);
+                    LevelManager.Instance.ShowPathPreview(path);
+                    _previousNodeId = nodeId;
+                }
+            }
         }
+
     }
 
     private void OnMouseEnterGrid(NavGrid grid)
@@ -146,7 +171,7 @@ public class SelectMovementTargetHandler : InputStateHandler
         int nodeId = grid.IndexAt(_currentHit.point);
         Vector2 gridCoord = grid.GridCoordinatesAt(_currentHit.point);
         Vector3 worldPosition = _currentHit.point;
-        Debug.Log($"mouse entered Grid at world position:<color=orange> {worldPosition} , -> {gridCoord}</color>");
+        // Debug.Log($"mouse entered Grid at world position:<color=orange> {worldPosition} , -> {gridCoord}</color>");
     }
 
     private void OnMouseExitGrid(NavGrid grid)
