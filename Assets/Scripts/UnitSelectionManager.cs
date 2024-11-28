@@ -10,6 +10,19 @@ public class UnitSelectionManager : MonoBehaviour
 
     private static UnitSelectionManager _instance;
     public static UnitSelectionManager Instance { get { return _instance; } }
+    public Unit SelectedUnit { get => _selectedUnit; }
+    public int SelecterUnitNodeIndex
+    {
+        get
+        {
+            if (_selectedUnit == null)
+            {
+                return -1;
+            }
+            return _selectedUnit.GetComponent<Actor>().NodeIndex;
+        }
+    }
+
     private void Awake()
     {
         if (_instance != null && _instance != this)

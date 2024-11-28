@@ -7,6 +7,10 @@ public class LevelManager : MonoBehaviour
 {
     [SerializeField]
     WalkableAreaVisualizer _areaVisualizer;
+
+    [SerializeField, Required]
+    PathVisualizer _pathVisualizer;
+
     [SerializeField, Required]
     CameraController _camController;
     NavGrid _grid;
@@ -46,5 +50,16 @@ public class LevelManager : MonoBehaviour
         }
 
         _areaVisualizer.Initialize(_grid.TileSize);
+    }
+
+    public void ShowPathPreview(Path path)
+    {
+        _pathVisualizer.UpdatePath(path);
+        _pathVisualizer.Show();
+    }
+
+    public void HidePathReview()
+    {
+        _pathVisualizer.Hide();
     }
 }

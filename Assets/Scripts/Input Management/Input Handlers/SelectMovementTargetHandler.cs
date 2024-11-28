@@ -133,6 +133,12 @@ public class SelectMovementTargetHandler : InputStateHandler
         Vector2 gridCoord = grid.GridCoordinatesAt(_currentHit.point);
         Vector3 worldPosition = _currentHit.point;
         Debug.Log($"clicked Grid at world position:<color=<color=#c78bff> > {worldPosition} , -> {gridCoord}</color>");
+        Actor actor = UnitSelectionManager.Instance.SelectedUnit.gameObject.GetComponent<Actor>();
+        if (actor != null)
+        {
+            Path path = Pathfinder.FindPath(LevelManager.Instance.Grid, actor.NodeIndex, nodeId);
+            LevelManager.Instance.ShowPathPreview(path);
+        }
     }
 
     private void OnMouseEnterGrid(NavGrid grid)
