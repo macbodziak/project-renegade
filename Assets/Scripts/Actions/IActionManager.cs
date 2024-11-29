@@ -5,5 +5,4 @@ public interface IActionManager
 {
     public void ExecuteSelectedAction(IActionArgs args);
     public void OnSelectedAcionCompleted();
-    public void StartCoroutine(IEnumerator coroutine);
 }

@@ -23,6 +23,10 @@ public class PlayerActionManager : MonoBehaviour, IActionManager
         }
     }
     public IAction SelectedAction { get => _selectedAction; }
+    public event EventHandler UnitSelectionChangedEvent;
+    public event EventHandler UnitSelectionCanceledEvent;
+    public event EventHandler ActionExecutionStartedEvent;
+    public event EventHandler ActionExecutionFinishedEvent;
 
     private void Awake()
     {
@@ -35,11 +39,6 @@ public class PlayerActionManager : MonoBehaviour, IActionManager
             _instance = this;
             InitializationStateOnAwake();
         }
-    }
-
-    private void Update()
-    {
-        //while action in progress 
     }
 
     private void InitializationStateOnAwake()
@@ -75,7 +74,7 @@ public class PlayerActionManager : MonoBehaviour, IActionManager
         InputManager.Instance.SetState(InputManager.State.SelectMovementTarget);
         _selectedAction = new MoveAction();
 
-        //TODO - add event trigger
+        UnitSelectionChangedEvent?.Invoke(this, EventArgs.Empty);
     }
 
 
@@ -88,10 +87,10 @@ public class PlayerActionManager : MonoBehaviour, IActionManager
             {
                 indicator.IsActive = false;
             }
-            // LevelManager.Instance.HideWalkableArea();
             InputManager.Instance.SetState(InputManager.State.SelectUnit);
         }
         _selectedUnit = null;
+        UnitSelectionCanceledEvent?.Invoke(this, EventArgs.Empty);
     }
 
 
@@ -116,11 +115,5 @@ public class PlayerActionManager : MonoBehaviour, IActionManager
     public void OnSelectedAcionCompleted()
     {
         InputManager.Instance.SetState(InputManager.State.SelectMovementTarget);
-    }
-
-
-    void IActionManager.StartCoroutine(IEnumerator coroutine)
-    {
-        StartCoroutine(coroutine);
     }
 }

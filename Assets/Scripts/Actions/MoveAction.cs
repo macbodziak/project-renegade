@@ -1,6 +1,7 @@
 using Navigation;
 using UnityEngine;
 using System.Collections;
+using System.Threading.Tasks;
 
 public class MoveAction : IAction
 {
@@ -10,23 +11,13 @@ public class MoveAction : IAction
     bool _inProgress;
     IActionManager _actionManager;
 
-    public void Execute(IActionManager actionManager, IActionArgs actionArgs)
+    public async void Execute(IActionManager actionManager, IActionArgs actionArgs)
     {
         MoveActionArgs args = actionArgs as MoveActionArgs;
         _unit = args.unit;
         _path = args.path;
         _actionManager = actionManager;
 
-        _actionManager.StartCoroutine(ExecutionCoroutine());
-    }
-
-    public bool InProgress()
-    {
-        return _inProgress;
-    }
-
-    private IEnumerator ExecutionCoroutine()
-    {
         _unit.MoveAlongPath(_path);
         _inProgress = true;
 
@@ -37,10 +28,15 @@ public class MoveAction : IAction
 
         while (_unit.actor.State != ActorState.Idle)
         {
-            yield return null;
+            await Task.Yield();
         }
         _inProgress = false;
         _unit.animator.SetBool("Running", false);
         _actionManager.OnSelectedAcionCompleted();
+    }
+
+    public bool InProgress()
+    {
+        return _inProgress;
     }
 }
