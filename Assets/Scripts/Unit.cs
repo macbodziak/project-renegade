@@ -14,12 +14,12 @@ public class Unit : MonoBehaviour
     [SerializeField]
     [Sirenix.OdinInspector.ReadOnly]
     private int _currentMovementPoints;
-    WalkableArea _walkableArea;
+    WalkableArea _walkableAreaCache;
 
     public bool IsPlayer { get => _isPlayer; }
     public int MovementPoints { get => _movementPoints; }
     public int CurrentMovementPoints { get => _currentMovementPoints; }
-    public Actor Actor { get => _actor; }
+    public Actor actor { get => _actor; }
     public int NodeIndex { get => _actor.NodeIndex; }
 
     void Awake()
@@ -31,17 +31,23 @@ public class Unit : MonoBehaviour
 
     public WalkableArea GetWalkableArea()
     {
-        if (_walkableArea == null)
+        if (_walkableAreaCache == null)
         {
-            _walkableArea = Pathfinder.FindWalkableArea(LevelManager.Instance.Grid, NodeIndex, _currentMovementPoints);
+            _walkableAreaCache = Pathfinder.FindWalkableArea(LevelManager.Instance.Grid, NodeIndex, _currentMovementPoints);
         }
 
-        return _walkableArea;
+        return _walkableAreaCache;
     }
 
     public void NullifyWalkableArea()
     {
-        _walkableArea = null;
+        _walkableAreaCache = null;
+    }
+
+    public void MoveAlongPath(Path path)
+    {
+        _actor.MoveAlongPath(path);
+        NullifyWalkableArea();
     }
 
 }

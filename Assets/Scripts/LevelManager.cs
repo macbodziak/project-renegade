@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Navigation;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -15,6 +16,12 @@ public class LevelManager : MonoBehaviour
     CameraController _camController;
     NavGrid _grid;
     private static LevelManager _instance;
+    [SerializeField]
+    [Sirenix.OdinInspector.ReadOnly]
+    private List<Unit> _playerUnits;
+    private List<Unit> _enemyUnits;
+
+
     public static LevelManager Instance { get { return _instance; } }
     public CameraController CamController { get => _camController; }
 
@@ -37,6 +44,7 @@ public class LevelManager : MonoBehaviour
     {
         _grid = FindAnyObjectByType<NavGrid>();
         InitilizeWalkableAreaVisualizer();
+        InitilizeUnitList();
     }
 
     private void InitilizeWalkableAreaVisualizer()
@@ -49,6 +57,29 @@ public class LevelManager : MonoBehaviour
         }
 
         _areaVisualizer.Initialize(_grid.TileSize);
+    }
+
+    private void InitilizeUnitList()
+    {
+        Unit unit;
+
+        List<Actor> actors = _grid.GetActors();
+        foreach (var actor in actors)
+        {
+            unit = actor.gameObject.GetComponent<Unit>();
+            if (unit != null)
+            {
+                if (unit.IsPlayer)
+                {
+                    _playerUnits.Add(unit);
+                }
+                else
+                {
+                    _enemyUnits.Add(unit);
+                }
+            }
+
+        }
     }
 
     public void ShowPathPreview(Path path)
@@ -71,5 +102,13 @@ public class LevelManager : MonoBehaviour
     public void HideWalkableArea()
     {
         _areaVisualizer.Hide();
+    }
+
+    public void NullifyPlayerWalkableAreas()
+    {
+        foreach (var unit in _playerUnits)
+        {
+            unit.NullifyWalkableArea();
+        }
     }
 }

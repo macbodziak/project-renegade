@@ -4,6 +4,7 @@ using UnityEngine;
 public class SelectMovementTargetHandler : InputStateHandler
 {
     int _previousNodeId;
+    Path _path;
 
     public SelectMovementTargetHandler(LayerMask unitLayerMask) : base(unitLayerMask)
     {
@@ -12,11 +13,14 @@ public class SelectMovementTargetHandler : InputStateHandler
     public override void OnEnter()
     {
         _previousNodeId = -1;
+        _path = null;
+        LevelManager.Instance.ShowWalkableArea(PlayerActionManager.Instance.SelectedUnit.GetWalkableArea());
     }
 
     public override void OnExit()
     {
         LevelManager.Instance.HidePathPreview();
+        LevelManager.Instance.HideWalkableArea();
     }
 
     public override void HandleInput()
@@ -130,8 +134,13 @@ public class SelectMovementTargetHandler : InputStateHandler
 
     private void OnPlayerUnitClicked(Unit unit)
     {
-        PlayerActionManager.Instance.SetSelectedUnit(unit);
-        LevelManager.Instance.HidePathPreview();
+        if (unit != PlayerActionManager.Instance.SelectedUnit)
+        {
+            PlayerActionManager.Instance.SetSelectedUnit(unit);
+            LevelManager.Instance.HidePathPreview();
+            LevelManager.Instance.ShowWalkableArea(PlayerActionManager.Instance.SelectedUnit.GetWalkableArea());
+            _path = null;
+        }
     }
 
     private void OnCancel()
@@ -149,16 +158,20 @@ public class SelectMovementTargetHandler : InputStateHandler
         {
             if (_previousNodeId == nodeId)
             {
-                Debug.Log($"<color=#819470>Trigger task execution</color>");
                 LevelManager.Instance.HidePathPreview();
+
+                if (PlayerActionManager.Instance.SelectedAction is MoveAction moveAction)
+                {
+                    PlayerActionManager.Instance.ExecuteSelectedAction(new MoveActionArgs(PlayerActionManager.Instance.SelectedUnit, _path));
+                }
             }
             else
             {
                 Actor actor = PlayerActionManager.Instance.SelectedUnit.gameObject.GetComponent<Actor>();
                 if (actor != null)
                 {
-                    Path path = Pathfinder.FindPath(LevelManager.Instance.Grid, actor.NodeIndex, nodeId);
-                    LevelManager.Instance.ShowPathPreview(path);
+                    _path = Pathfinder.FindPath(LevelManager.Instance.Grid, actor.NodeIndex, nodeId);
+                    LevelManager.Instance.ShowPathPreview(_path);
                     _previousNodeId = nodeId;
                 }
             }
@@ -176,11 +189,9 @@ public class SelectMovementTargetHandler : InputStateHandler
 
     private void OnMouseExitGrid(NavGrid grid)
     {
-        Debug.Log($"EXITING Grid at world position:");
     }
 
     private void OnMouseStayOverGrid(NavGrid grid)
     {
-
     }
 }
