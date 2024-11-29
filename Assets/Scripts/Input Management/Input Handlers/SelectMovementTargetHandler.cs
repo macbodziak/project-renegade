@@ -150,11 +150,12 @@ public class SelectMovementTargetHandler : InputStateHandler
 
     private void OnGridClicked(NavGrid grid)
     {
+        //TODO - why is there a null exp after moving??
         int nodeId = grid.IndexAt(_currentHit.point);
 
         WalkableArea area = PlayerActionManager.Instance.SelectedUnit.GetWalkableArea();
 
-        if (area.ContainsNode(nodeId))
+        if (area != null && area.ContainsNode(nodeId))
         {
             if (_previousNodeId == nodeId)
             {

@@ -46,6 +46,7 @@ public class Unit : MonoBehaviour
 
     public void MoveAlongPath(Path path)
     {
+        _currentMovementPoints -= path.cost;
         _actor.MoveAlongPath(path);
         NullifyWalkableArea();
     }

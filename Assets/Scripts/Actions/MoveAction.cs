@@ -1,5 +1,4 @@
 using Navigation;
-using Game;
 using UnityEngine;
 using System.Collections;
 
@@ -22,7 +21,11 @@ public class MoveAction : IAction
         if (_unit.actor.State == ActorState.Moving)
         {
             _inProgress = true;
-            _unit.actor.MovementFinishedEvent += HandleMovementFinished;
+            _actionManager.StartCoroutine(ExecutionCoroutine());
+        }
+        else
+        {
+            _actionManager.OnSelectedAcionCompleted();
         }
 
     }
@@ -32,15 +35,13 @@ public class MoveAction : IAction
         return _inProgress;
     }
 
-    // private IEnumerator MonitorProgressCoroutine()
-    // {
-
-    // }
-
-    private void HandleMovementFinished(object sender, ActorFinishedMovementEventArgs eventArgs)
+    private IEnumerator ExecutionCoroutine()
     {
+        while (_unit.actor.State != ActorState.Idle)
+        {
+            yield return null;
+        }
         _inProgress = false;
         _actionManager.OnSelectedAcionCompleted();
-        _unit.actor.MovementFinishedEvent -= HandleMovementFinished;
     }
 }

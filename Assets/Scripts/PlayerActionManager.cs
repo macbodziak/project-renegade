@@ -1,7 +1,6 @@
 using System;
-using Game;
+using System.Collections;
 using Navigation;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerActionManager : MonoBehaviour, IActionManager
@@ -119,4 +118,9 @@ public class PlayerActionManager : MonoBehaviour, IActionManager
         InputManager.Instance.SetState(InputManager.State.SelectMovementTarget);
     }
 
+
+    void IActionManager.StartCoroutine(IEnumerator coroutine)
+    {
+        StartCoroutine(coroutine);
+    }
 }
