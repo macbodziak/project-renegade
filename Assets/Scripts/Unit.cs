@@ -21,12 +21,17 @@ public class Unit : MonoBehaviour
     public int CurrentMovementPoints { get => _currentMovementPoints; }
     public Actor actor { get => _actor; }
     public int NodeIndex { get => _actor.NodeIndex; }
+    public Animator animator { get => _animator; }
 
-    void Awake()
+    private void Awake()
     {
-        _animator = GetComponent<Animator>();
-        _actor = GetComponent<Actor>();
         _currentMovementPoints = _movementPoints;
+    }
+
+    private void Start()
+    {
+        _animator = GetComponentInChildren<Animator>();
+        _actor = GetComponent<Actor>();
     }
 
     public WalkableArea GetWalkableArea()

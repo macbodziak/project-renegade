@@ -17,17 +17,7 @@ public class MoveAction : IAction
         _path = args.path;
         _actionManager = actionManager;
 
-        _unit.MoveAlongPath(_path);
-        if (_unit.actor.State == ActorState.Moving)
-        {
-            _inProgress = true;
-            _actionManager.StartCoroutine(ExecutionCoroutine());
-        }
-        else
-        {
-            _actionManager.OnSelectedAcionCompleted();
-        }
-
+        _actionManager.StartCoroutine(ExecutionCoroutine());
     }
 
     public bool InProgress()
@@ -37,11 +27,20 @@ public class MoveAction : IAction
 
     private IEnumerator ExecutionCoroutine()
     {
+        _unit.MoveAlongPath(_path);
+        _inProgress = true;
+
+        if (_unit.actor.State == ActorState.Moving)
+        {
+            _unit.animator.SetBool("Running", true);
+        }
+
         while (_unit.actor.State != ActorState.Idle)
         {
             yield return null;
         }
         _inProgress = false;
+        _unit.animator.SetBool("Running", false);
         _actionManager.OnSelectedAcionCompleted();
     }
 }
