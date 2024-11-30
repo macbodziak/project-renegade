@@ -7,8 +7,8 @@ public class MoveActionArgs : IActionArgs
     private Path _path;
 
 
-    public Unit unit { get => _unit; set => _unit = value; }
-    public Path path { get => _path; set => _path = value; }
+    public Unit unit { get => _unit; }
+    public Path path { get => _path; }
 
 
     public MoveActionArgs(Unit unit, Path path)
