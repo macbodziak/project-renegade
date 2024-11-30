@@ -29,7 +29,10 @@ public class TileSelectionIndicator : SelectionIndicator
         _highlightObject.SetActive(false);
     }
 
-
+    private void LateUpdate()
+    {
+        _highlightObject.transform.rotation = Quaternion.identity;
+    }
 
     protected override void OnEnterState()
     {

@@ -3,9 +3,10 @@ using UnityEngine;
 
 public class ActionExecutionTest : MonoBehaviour
 {
-    public float _duration;
+    public float _danceDuration = 1.5f;
+    [InfoBox("Select a Unit in play mode before executing test")]
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    [Button("Execute Dance Action with Selected Unit")]
+    [Button("Execute Dance Action")]
     public void TestDanceAction()
     {
         Unit _unit = PlayerActionManager.Instance.SelectedUnit;
@@ -15,6 +16,6 @@ public class ActionExecutionTest : MonoBehaviour
             return;
         }
         PlayerActionManager.Instance.SetSelectedAction(new DanceAction());
-        PlayerActionManager.Instance.ExecuteSelectedAction(new DanceActionArgs(_unit, _duration));
+        PlayerActionManager.Instance.ExecuteSelectedAction(new DanceActionArgs(_unit, _danceDuration));
     }
 }
