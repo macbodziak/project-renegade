@@ -2,13 +2,15 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LevelUI_Manager : MonoBehaviour
+public class LevelUIManager : MonoBehaviour
 {
     [SerializeField] Button _endTurnButton;
 
     private void Start()
     {
         RegisterEventHandlers();
+
+        _endTurnButton.onClick.AddListener(TurnManager.Instance.EndTurn);
     }
 
     private void OnDestroy()
@@ -32,10 +34,34 @@ public class LevelUI_Manager : MonoBehaviour
         _endTurnButton.interactable = true;
     }
 
+    private void HandleTurnEndedEvent(object sender, bool isPlayerTurn)
+    {
+        if (isPlayerTurn)
+        {
+            EnablePlayerInteraction();
+        }
+        else
+        {
+            DisablePlayerInteraction();
+        }
+    }
+
+    private void DisablePlayerInteraction()
+    {
+        _endTurnButton.interactable = false;
+    }
+
+    private void EnablePlayerInteraction()
+    {
+        _endTurnButton.interactable = true;
+    }
+
     private void RegisterEventHandlers()
     {
         PlayerActionManager.Instance.ActionExecutionStartedEvent += HandleActionExecutionStarted;
         PlayerActionManager.Instance.ActionExecutionFinishedEvent += HandleActionExecutionFinished;
+
+        TurnManager.Instance.TurnEndedEvent += HandleTurnEndedEvent;
     }
 }
 

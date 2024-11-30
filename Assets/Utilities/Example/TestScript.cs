@@ -1,7 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 using Utilities;
 
@@ -20,7 +17,7 @@ public class TestScript : MonoBehaviour
 
     void Start()
     {
-        queue = new CommandQueue(this);
+        queue = new CommandQueue();
         queue.ExecutionCompletedEvent += OnExecutionFinished;
         queue.Add(new ChangeColorCommand(agent, Color.magenta));
         queue.Add(new MoveCommand(agent, point_1.position, speed_1));
@@ -50,10 +47,36 @@ public class TestScript : MonoBehaviour
         {
             queue.Stop();
         }
+
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            Test();
+        }
     }
 
     void OnExecutionFinished(object sender, EventArgs evt)
     {
         Debug.Log("OnExecutionFinished event handled");
+    }
+
+    void OnDestroy()
+    {
+        Debug.Log("DESTROY");
+        queue.Cancel();
+    }
+
+    void Test()
+    {
+        if (queue.IsExecuting)
+        {
+            Debug.Log("queue is already running");
+            return;
+        }
+        queue.Add(new MoveCommand(agent, point_1.position, speed_1));
+        queue.Add(new ChangeColorCommand(agent, Color.magenta));
+        queue.Add(new MoveCommand(agent, point_3.position, speed_2));
+        queue.Add(new ChangeColorCommand(agent, new Color(1f, 0.4f, 0.85f)));
+        queue.Add(new MoveCommand(agent, point_2.position, speed_3));
+        queue.Execute();
     }
 }

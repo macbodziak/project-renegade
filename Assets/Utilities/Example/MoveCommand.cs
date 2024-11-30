@@ -1,9 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 using Utilities;
 
-public class MoveCommand : ICoroutineCommand
+public class MoveCommand : ICommand
 {
     GameObject gameObject;
     Vector3 targetPosition;
@@ -16,13 +15,18 @@ public class MoveCommand : ICoroutineCommand
         speed = _speed;
     }
 
-    public IEnumerator Execute()
+    public async Awaitable Execute(CancellationToken cancellationToken)
     {
+        Debug.Log($"Executing Move command at frame <color=#ffa08b>{Time.frameCount}</color>");
         gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, targetPosition, speed * Time.deltaTime);
         while (gameObject.transform.position != targetPosition)
         {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                break;
+            }
             gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, targetPosition, speed * Time.deltaTime);
-            yield return null;
+            await Awaitable.NextFrameAsync();
         }
     }
 }

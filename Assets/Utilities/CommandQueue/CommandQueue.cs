@@ -1,8 +1,6 @@
 using System.Collections.Generic;
-using System.Collections;
-using UnityEngine;
 using System;
-using System.Windows.Input;
+using System.Threading;
 
 namespace Utilities
 {
@@ -14,102 +12,79 @@ namespace Utilities
     public class CommandQueue
     {
 
-        MonoBehaviour monoBehaviour;
-        Queue<object> commandQueue;
+        Queue<ICommand> _commandQueue;
+        private CancellationTokenSource _tokenSource;
 
         public bool IsExecuting { get; private set; }
-        bool cancelRequested;
-        Coroutine currentCoroutine;
+        bool _stopRequested;
 
         public event EventHandler ExecutionCompletedEvent;
 
-        public CommandQueue(MonoBehaviour _monoBehaviour)
+        public CommandQueue()
         {
-            monoBehaviour = _monoBehaviour;
-            commandQueue = new Queue<object>();
+            _commandQueue = new();
             IsExecuting = false;
-            cancelRequested = false;
+            _stopRequested = false;
+            _tokenSource = new();
         }
 
         // <summary>
-        // This method starts executing queued routines 
+        // This method starts executing queued commands 
         // </summary>
-        public void Execute()
+        public async void Execute()
         {
             if (IsExecuting == true)
             {
                 return;
             }
 
-            monoBehaviour.StartCoroutine(ExecuteRoutine());
-        }
-
-        // <summary>
-        // This is an Coroutine called internally to start execution of queued routines
-        // </summary>
-        private IEnumerator ExecuteRoutine()
-        {
-            object nextCommand = null;
+            ICommand nextCommand = null;
 
             IsExecuting = true;
-            cancelRequested = false;
+            _stopRequested = false;
 
-            while (commandQueue.Count > 0)
+            while (_commandQueue.Count > 0)
             {
-                nextCommand = commandQueue.Dequeue();
-                if (nextCommand is Utilities.ICoroutineCommand coroutineCommand)
-                {
-                    currentCoroutine = monoBehaviour.StartCoroutine(coroutineCommand.Execute());
-                    yield return currentCoroutine;
-                }
-                else if (nextCommand is Utilities.IInstantCommand instantCommand)
-                {
-                    instantCommand.Execute();
-                }
+                nextCommand = _commandQueue.Dequeue();
 
+                await nextCommand.Execute(_tokenSource.Token);
 
-                if (cancelRequested)
+                if (_stopRequested)
                 {
-                    commandQueue.Clear();
-                    IsExecuting = false;
-                    cancelRequested = false;
-                    ExecutionCompletedEvent?.Invoke(this, EventArgs.Empty);
-                    yield break;
+                    _stopRequested = false;
+                    break;
                 }
             }
-            commandQueue.Clear();
+            _commandQueue.Clear();
             IsExecuting = false;
             ExecutionCompletedEvent?.Invoke(this, EventArgs.Empty);
         }
 
         // <summary>
-        // This method orders the Queue to stop executing routines once the currently executing routine finishes execution
+        // This method orders the Queue to stop executing command once the currently executing command finishes execution
         // </summary>
-        public void Cancel()
+        public void Stop()
         {
             if (IsExecuting)
             {
-                cancelRequested = true;
+                _stopRequested = true;
             }
             else
             {
-                commandQueue.Clear();
+                _commandQueue.Clear();
             }
         }
 
         // <summary>
-        // This method orders the Queue to stop executing routines immediately without waiting for the currently executing 
-        // to finish
+        // This method orders the Queue to stop executing commands immediately and cancels the currently
+        // executing task
         // </summary>
-        public void Stop()
+        public void Cancel()
         {
-            if (currentCoroutine != null)
-            {
-                monoBehaviour.StopCoroutine(currentCoroutine);
-            }
-            commandQueue.Clear();
-            currentCoroutine = null;
-
+            _tokenSource.Cancel();
+            _tokenSource.Dispose();
+            _tokenSource = new();
+            _commandQueue.Clear();
         }
 
         // <summary>
@@ -123,23 +98,22 @@ namespace Utilities
                 return;
             }
 
-            commandQueue.Clear();
-            cancelRequested = false;
+            _commandQueue.Clear();
+            _stopRequested = false;
         }
 
         // <summary>
-        // Add a routine to the queue to be later executed
+        // Add a Command to the queue to be later executed
         // </summary>
-        public void Add(ICoroutineCommand command)
+        public void Add(ICommand command)
         {
-            commandQueue.Enqueue(command);
+            _commandQueue.Enqueue(command);
         }
 
-        public void Add(IInstantCommand command)
+        ~CommandQueue()
         {
-            commandQueue.Enqueue(command);
+            _tokenSource.Cancel();
+            _tokenSource.Dispose();
         }
-
-
     }
 }

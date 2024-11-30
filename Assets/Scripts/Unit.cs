@@ -1,3 +1,4 @@
+using System;
 using Navigation;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -56,4 +57,8 @@ public class Unit : MonoBehaviour
         NullifyWalkableArea();
     }
 
+    internal void RefreshOnNewTurn()
+    {
+        _currentMovementPoints = _movementPoints;
+    }
 }

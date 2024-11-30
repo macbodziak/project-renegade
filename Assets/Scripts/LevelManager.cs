@@ -26,6 +26,8 @@ public class LevelManager : MonoBehaviour
     public CameraController CamController { get => _camController; }
 
     public NavGrid Grid { get => _grid; }
+    public List<Unit> PlayerUnits { get => _playerUnits; }
+    public List<Unit> EnemyUnits { get => _enemyUnits; }
 
     private void Awake()
     {

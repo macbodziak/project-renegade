@@ -1,9 +1,8 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using System.Threading;
+
 using UnityEngine;
 
-public class ChangeColorCommand : Utilities.IInstantCommand
+public class ChangeColorCommand : Utilities.ICommand
 {
     GameObject gameObject;
     Color color;
@@ -14,8 +13,11 @@ public class ChangeColorCommand : Utilities.IInstantCommand
         color = _color;
     }
 
-    public void Execute()
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
+    public async Awaitable Execute(CancellationToken cancellationToken)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
     {
+        Debug.Log($"Executing Change Color command at frame <color=#c78bff>{Time.frameCount}</color>");
         MeshRenderer mr = gameObject.GetComponent<MeshRenderer>();
         mr.material.color = color;
     }
