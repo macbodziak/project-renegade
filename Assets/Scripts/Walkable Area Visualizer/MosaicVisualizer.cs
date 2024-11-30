@@ -37,17 +37,14 @@ public class MosaicVisualizer : WalkableAreaVisualizer
 
     public override void Show()
     {
-        if (_area == null)
-        {
-            return;
-        }
-
-        _isShowing = true;
-        gameObject.SetActive(true);
         if (_dirty)
         {
             RefreshArea();
         }
+
+        _isShowing = true;
+        gameObject.SetActive(true);
+
         DisplayArea();
     }
 
@@ -64,6 +61,11 @@ public class MosaicVisualizer : WalkableAreaVisualizer
 
     private void DisplayArea()
     {
+        if (_area == null)
+        {
+            return;
+        }
+
         WalkableAreaElement[] elements = _area.GetWalkableAreaElements();
         for (int i = 0; i < _area.Count(); i++)
         {
@@ -74,6 +76,15 @@ public class MosaicVisualizer : WalkableAreaVisualizer
 
     private void RefreshArea()
     {
+        if (_area == null)
+        {
+            foreach (var tile in _tiles)
+            {
+                tile.SetActive(false);
+            }
+            return;
+        }
+
         if (_area.Count() > _tiles.Count)
         {
             for (int i = _tiles.Count; i < _area.Count(); i++)

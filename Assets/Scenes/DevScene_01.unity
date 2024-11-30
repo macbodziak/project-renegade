@@ -523,7 +523,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isPlayer: 1
-  _movementPoints: 80
+  _movementPoints: 60
   _currentMovementPoints: 0
 --- !u!114 &118025021
 MonoBehaviour:
@@ -3062,7 +3062,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isPlayer: 1
-  _movementPoints: 80
+  _movementPoints: 60
   _currentMovementPoints: 0
 --- !u!1 &702727898
 GameObject:
@@ -3969,7 +3969,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isPlayer: 1
-  _movementPoints: 80
+  _movementPoints: 60
   _currentMovementPoints: 0
 --- !u!114 &897774962
 MonoBehaviour:

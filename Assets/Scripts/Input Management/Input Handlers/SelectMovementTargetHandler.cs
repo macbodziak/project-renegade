@@ -14,6 +14,7 @@ public class SelectMovementTargetHandler : InputStateHandler
     {
         _previousNodeId = -1;
         _path = null;
+        WalkableArea area = PlayerActionManager.Instance.SelectedUnit.GetWalkableArea();
         LevelManager.Instance.ShowWalkableArea(PlayerActionManager.Instance.SelectedUnit.GetWalkableArea());
     }
 
