@@ -186,7 +186,6 @@ public class SelectMovementTargetHandler : InputStateHandler
         int nodeId = grid.IndexAt(_currentHit.point);
         Vector2 gridCoord = grid.GridCoordinatesAt(_currentHit.point);
         Vector3 worldPosition = _currentHit.point;
-        // Debug.Log($"mouse entered Grid at world position:<color=orange> {worldPosition} , -> {gridCoord}</color>");
     }
 
     private void OnMouseExitGrid(NavGrid grid)

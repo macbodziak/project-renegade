@@ -24,13 +24,11 @@ public class LevelUIManager : MonoBehaviour
 
     private void HandleActionExecutionStarted(object sender, EventArgs eventArgs)
     {
-        Debug.Log($"<color=orange>HandleActionExecutionStarted</color>");
         _endTurnButton.interactable = false;
     }
 
     private void HandleActionExecutionFinished(object sender, EventArgs eventArgs)
     {
-        Debug.Log($"<color=orange>HandleActionExecutionFinished</color>");
         _endTurnButton.interactable = true;
     }
 

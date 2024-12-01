@@ -39,11 +39,7 @@ public class Unit : MonoBehaviour
     {
         if (_walkableAreaCache == null)
         {
-            float time_start = Time.realtimeSinceStartup;
             _walkableAreaCache = Pathfinder.FindWalkableArea(LevelManager.Instance.Grid, NodeIndex, _currentMovementPoints);
-            float time_finish = Time.realtimeSinceStartup;
-            float delta = (time_finish - time_start) * 1000f;
-            Debug.Log($"Time it took to calculate walkable area:  <color=#c78bff> {delta} ms</color>");
         }
 
         return _walkableAreaCache;

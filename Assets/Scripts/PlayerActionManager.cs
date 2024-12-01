@@ -109,7 +109,6 @@ public class PlayerActionManager : MonoBehaviour, IActionManager
 
         InputManager.Instance.SetState(InputManager.State.InputBlocked);
         LevelManager.Instance.NullifyPlayerWalkableAreas();
-        Debug.Log($"<color=#8bc5ff>OnSelectedAcionStarted</color>");
         ActionExecutionStartedEvent?.Invoke(this, EventArgs.Empty);
         _selectedAction.Execute(this, args);
 
@@ -118,7 +117,6 @@ public class PlayerActionManager : MonoBehaviour, IActionManager
 
     public void OnSelectedAcionCompleted()
     {
-        Debug.Log($"<color=#8bc5ff>OnSelectedAcionCompleted</color>");
         InputManager.Instance.SetState(InputManager.State.SelectMovementTarget);
         ActionExecutionFinishedEvent?.Invoke(this, EventArgs.Empty);
     }
