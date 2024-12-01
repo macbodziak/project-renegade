@@ -49,7 +49,14 @@ public class TurnManager : MonoBehaviour
     private void StartPlayerTurn()
     {
         RefreshPlayerUnits();
-        InputManager.Instance.SetState(InputManager.State.SelectUnit);
+        if (PlayerActionManager.Instance.SelectedUnit != null)
+        {
+            InputManager.Instance.SetState(InputManager.State.SelectMovementTarget);
+        }
+        else
+        {
+            InputManager.Instance.SetState(InputManager.State.SelectUnit);
+        }
     }
 
     private void RefreshPlayerUnits()
