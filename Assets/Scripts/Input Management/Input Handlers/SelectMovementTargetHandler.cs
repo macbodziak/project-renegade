@@ -21,7 +21,8 @@ public class SelectMovementTargetHandler : InputStateHandler
     public override void OnExit()
     {
         LevelManager.Instance.HidePathPreview();
-        LevelManager.Instance.HideWalkableArea();
+        //TODO - this is probably ot needed
+        // LevelManager.Instance.HideWalkableArea();
     }
 
     public override void HandleInput()
@@ -151,7 +152,6 @@ public class SelectMovementTargetHandler : InputStateHandler
 
     private void OnGridClicked(NavGrid grid)
     {
-        //TODO - why is there a null exp after moving??
         int nodeId = grid.IndexAt(_currentHit.point);
 
         WalkableArea area = PlayerActionManager.Instance.SelectedUnit.GetWalkableArea();

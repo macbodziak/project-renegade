@@ -7,6 +7,11 @@ public class SelectUnitHandler : InputStateHandler
     {
     }
 
+    public override void OnEnter()
+    {
+        LevelManager.Instance.HideWalkableArea();
+    }
+
     public override void HandleInput()
     {
         UpdateRaycastHit();

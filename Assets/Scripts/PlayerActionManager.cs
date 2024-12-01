@@ -55,6 +55,7 @@ public class PlayerActionManager : MonoBehaviour, IActionManager
 
         SelectionIndicator indicator;
 
+        //disable indicator of previously selected unit
         if (_selectedUnit != null)
         {
             indicator = _selectedUnit.GetComponent<SelectionIndicator>();
@@ -72,6 +73,7 @@ public class PlayerActionManager : MonoBehaviour, IActionManager
         }
 
         InputManager.Instance.SetState(InputManager.State.SelectMovementTarget);
+        //TODO - desing proper action system
         _selectedAction = new MoveAction();
 
         UnitSelectionChangedEvent?.Invoke(this, EventArgs.Empty);
