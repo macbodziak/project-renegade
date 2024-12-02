@@ -16,6 +16,6 @@ public class ActionExecutionTest : MonoBehaviour
             return;
         }
         PlayerActionManager.Instance.SetSelectedAction(new DanceAction());
-        PlayerActionManager.Instance.ExecuteSelectedAction(new DanceActionArgs(_unit, _danceDuration));
+        PlayerActionManager.Instance.ExecuteSelectedAction();
     }
 }

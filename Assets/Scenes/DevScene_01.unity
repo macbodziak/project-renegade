@@ -525,6 +525,8 @@ MonoBehaviour:
   _isPlayer: 1
   _movementPoints: 60
   _currentMovementPoints: 0
+  _moveAction: {fileID: 0}
+  _actions: []
 --- !u!114 &118025021
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3064,6 +3066,9 @@ MonoBehaviour:
   _isPlayer: 1
   _movementPoints: 60
   _currentMovementPoints: 0
+  _moveAction: {fileID: 11400000, guid: 513124ee46e87954b8791478679a95ea, type: 2}
+  _actions:
+  - {fileID: 11400000, guid: d34dee9c79845374ebfa17c0e7f52c82, type: 2}
 --- !u!1 &702727898
 GameObject:
   m_ObjectHideFlags: 0
@@ -3971,6 +3976,8 @@ MonoBehaviour:
   _isPlayer: 1
   _movementPoints: 60
   _currentMovementPoints: 0
+  _moveAction: {fileID: 0}
+  _actions: []
 --- !u!114 &897774962
 MonoBehaviour:
   m_ObjectHideFlags: 0

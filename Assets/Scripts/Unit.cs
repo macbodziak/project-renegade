@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Navigation;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -15,6 +16,8 @@ public class Unit : MonoBehaviour
     [SerializeField]
     [Sirenix.OdinInspector.ReadOnly]
     private int _currentMovementPoints;
+    [SerializeField] private Ability _moveAction;
+    [SerializeField] private List<Ability> _actions;
     WalkableArea _walkableAreaCache;
 
     public bool IsPlayer { get => _isPlayer; }

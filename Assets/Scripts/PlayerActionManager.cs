@@ -9,6 +9,7 @@ public class PlayerActionManager : MonoBehaviour, IActionManager
     private Unit _selectedUnit;
     private IAction _selectedAction;
     private static PlayerActionManager _instance;
+    public ActionArgs actionArgs;
     public static PlayerActionManager Instance { get { return _instance; } }
     public Unit SelectedUnit { get => _selectedUnit; }
     public int SelectedUnitNodeIndex
@@ -28,6 +29,7 @@ public class PlayerActionManager : MonoBehaviour, IActionManager
     public event EventHandler ActionExecutionStartedEvent;
     public event EventHandler ActionExecutionFinishedEvent;
 
+
     private void Awake()
     {
         if (_instance != null && _instance != this)
@@ -44,6 +46,7 @@ public class PlayerActionManager : MonoBehaviour, IActionManager
     private void InitializationStateOnAwake()
     {
         _selectedUnit = null;
+        actionArgs = new();
     }
 
     public void SetSelectedUnit(Unit unit)
@@ -102,7 +105,7 @@ public class PlayerActionManager : MonoBehaviour, IActionManager
         _selectedAction = action;
     }
 
-    public void ExecuteSelectedAction(IActionArgs args)
+    public void ExecuteSelectedAction()
     {
         if (_selectedAction == null)
         {
@@ -112,7 +115,7 @@ public class PlayerActionManager : MonoBehaviour, IActionManager
         InputManager.Instance.SetState(InputManager.State.InputBlocked);
         LevelManager.Instance.NullifyPlayerWalkableAreas();
         ActionExecutionStartedEvent?.Invoke(this, EventArgs.Empty);
-        _selectedAction.Execute(this, args);
+        _selectedAction.Execute(this, actionArgs);
 
     }
 

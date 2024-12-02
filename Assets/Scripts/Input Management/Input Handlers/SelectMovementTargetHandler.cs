@@ -164,7 +164,11 @@ public class SelectMovementTargetHandler : InputStateHandler
 
                 if (PlayerActionManager.Instance.SelectedAction is MoveAction moveAction)
                 {
-                    PlayerActionManager.Instance.ExecuteSelectedAction(new MoveActionArgs(PlayerActionManager.Instance.SelectedUnit, _path));
+                    //TODO - maybe there should be a MoveAction.SetArguments()
+                    PlayerActionManager.Instance.actionArgs.ActingUnit = PlayerActionManager.Instance.SelectedUnit;
+                    PlayerActionManager.Instance.actionArgs.Path = _path;
+
+                    PlayerActionManager.Instance.ExecuteSelectedAction();
                 }
             }
             else
