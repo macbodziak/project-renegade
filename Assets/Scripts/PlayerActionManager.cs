@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Navigation;
 using UnityEngine;
 
@@ -24,7 +25,7 @@ public class PlayerActionManager : MonoBehaviour, IActionManager
         }
     }
     public IAction SelectedAction { get => _selectedAction; }
-    public event EventHandler UnitSelectionChangedEvent;
+    public event EventHandler<SelectedUnitChangedEventArgs> UnitSelectionChangedEvent;
     public event EventHandler UnitSelectionCanceledEvent;
     public event EventHandler ActionExecutionStartedEvent;
     public event EventHandler ActionExecutionFinishedEvent;
@@ -57,34 +58,56 @@ public class PlayerActionManager : MonoBehaviour, IActionManager
         }
 
         SelectionIndicator indicator;
-
+        Unit previousUnit = _selectedUnit;
         //disable indicator of previously selected unit
-        if (_selectedUnit != null)
-        {
-            indicator = _selectedUnit.GetComponent<SelectionIndicator>();
-            if (indicator != null)
-            {
-                indicator.IsActive = false;
-            }
-        }
+        DeselectUnit();
 
-        _selectedUnit = unit;
-        indicator = _selectedUnit.GetComponent<SelectionIndicator>();
-        if (indicator != null)
-        {
-            indicator.IsActive = true;
-        }
+        SelectUnit();
 
-        InputManager.Instance.SetState(InputManager.State.SelectMovementTarget);
         //TODO - desing proper action system
         _selectedAction = new MoveAction();
 
-        UnitSelectionChangedEvent?.Invoke(this, EventArgs.Empty);
+        UnitSelectionChangedEvent?.Invoke(this, new SelectedUnitChangedEventArgs(previousUnit, _selectedUnit));
+
+        void DeselectUnit()
+        {
+            if (_selectedUnit != null)
+            {
+                indicator = _selectedUnit.GetComponent<SelectionIndicator>();
+                if (indicator != null)
+                {
+                    indicator.IsActive = false;
+                }
+            }
+        }
+
+        void SelectUnit()
+        {
+            _selectedUnit = unit;
+            indicator = _selectedUnit.GetComponent<SelectionIndicator>();
+            if (indicator != null)
+            {
+                indicator.IsActive = true;
+            }
+
+            DebugPrintAbilites(_selectedUnit.Abilities);
+            InputManager.Instance.SetState(InputManager.State.SelectMovementTarget);
+        }
+
+
+        void DebugPrintAbilites(List<Ability> abilities)
+        {
+            foreach (var ab in abilities)
+            {
+                Debug.Log(ab.name);
+            }
+        }
     }
 
 
     public void CancelSelection()
     {
+        //TODO - also set selected action to null
         if (_selectedUnit != null)
         {
             SelectionIndicator indicator = _selectedUnit.GetComponent<SelectionIndicator>();
@@ -100,9 +123,16 @@ public class PlayerActionManager : MonoBehaviour, IActionManager
 
 
     //TODO remove this?
-    public void SetSelectedAction(IAction action)
+    // public void SetSelectedAction(IAction action)
+    // {
+    //     _selectedAction = action;
+    //     // InputManager.Instance.SetState()
+    // }
+
+    public void SetSelectedAbility(Ability ability)
     {
-        _selectedAction = action;
+        _selectedAction = ability.GetAction();
+        InputManager.Instance.SetState(ability.InputState);
     }
 
     public void ExecuteSelectedAction()

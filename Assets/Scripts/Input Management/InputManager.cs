@@ -9,6 +9,7 @@ public class InputManager : MonoBehaviour
     {
         SelectUnit,
         SelectMovementTarget,
+        Confirm,
         InputBlocked,
         None
     }
@@ -95,6 +96,7 @@ public class InputManager : MonoBehaviour
         {
             new SelectUnitHandler(_inputLayerMask),
             new SelectMovementTargetHandler(_inputLayerMask),
+            new ConfirmHandler(0),
             new InputBlockedHandler(0)
         };
     }

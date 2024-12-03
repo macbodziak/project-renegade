@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class LevelUIManager : MonoBehaviour
 {
     [SerializeField] Button _endTurnButton;
+    [SerializeField] AbilitiesPanel _abilitiesPanel;
 
     private void Start()
     {
@@ -19,17 +20,29 @@ public class LevelUIManager : MonoBehaviour
         {
             PlayerActionManager.Instance.ActionExecutionStartedEvent -= HandleActionExecutionStarted;
             PlayerActionManager.Instance.ActionExecutionFinishedEvent -= HandleActionExecutionFinished;
+            PlayerActionManager.Instance.UnitSelectionChangedEvent -= HandleUnitSelectionChanged;
         }
+    }
+
+
+    private void RegisterEventHandlers()
+    {
+        PlayerActionManager.Instance.ActionExecutionStartedEvent += HandleActionExecutionStarted;
+        PlayerActionManager.Instance.ActionExecutionFinishedEvent += HandleActionExecutionFinished;
+        PlayerActionManager.Instance.UnitSelectionChangedEvent += HandleUnitSelectionChanged;
+
+        TurnManager.Instance.TurnEndedEvent += HandleTurnEndedEvent;
     }
 
     private void HandleActionExecutionStarted(object sender, EventArgs eventArgs)
     {
-        _endTurnButton.interactable = false;
+        DisablePlayerInteraction();
     }
 
     private void HandleActionExecutionFinished(object sender, EventArgs eventArgs)
     {
-        _endTurnButton.interactable = true;
+        EnablePlayerInteraction();
+        _abilitiesPanel.Reset();
     }
 
     private void HandleTurnEndedEvent(object sender, bool isPlayerTurn)
@@ -47,19 +60,28 @@ public class LevelUIManager : MonoBehaviour
     private void DisablePlayerInteraction()
     {
         _endTurnButton.interactable = false;
+        _abilitiesPanel.interactable = false;
     }
 
     private void EnablePlayerInteraction()
     {
         _endTurnButton.interactable = true;
+        _abilitiesPanel.interactable = true;
     }
 
-    private void RegisterEventHandlers()
+
+    private void HandleUnitSelectionChanged(object sender, SelectedUnitChangedEventArgs e)
     {
-        PlayerActionManager.Instance.ActionExecutionStartedEvent += HandleActionExecutionStarted;
-        PlayerActionManager.Instance.ActionExecutionFinishedEvent += HandleActionExecutionFinished;
-
-        TurnManager.Instance.TurnEndedEvent += HandleTurnEndedEvent;
+        if (e.CurrentUnit != null)
+        {
+            _abilitiesPanel.UpdateAbilities(e.CurrentUnit.Abilities);
+            _abilitiesPanel.Show();
+        }
+        else
+        {
+            _abilitiesPanel.Hide();
+        }
     }
+
 }
 

@@ -5,7 +5,7 @@ using UnityEngine;
 public class DanceAction : IAction
 {
     private Unit _unit;
-    float _duration;
+    float _duration = 2.25f;
     bool _inProgress;
 
     public async void Execute(IActionManager actionManager, ActionArgs actionArgs)

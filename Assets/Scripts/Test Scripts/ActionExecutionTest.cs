@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class ActionExecutionTest : MonoBehaviour
 {
+    [SerializeField]
+    Ability _daneAbility;
     public float _danceDuration = 1.5f;
     [InfoBox("Select a Unit in play mode before executing test")]
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -15,7 +17,7 @@ public class ActionExecutionTest : MonoBehaviour
             Debug.Log("No Unit Selected");
             return;
         }
-        PlayerActionManager.Instance.SetSelectedAction(new DanceAction());
+        PlayerActionManager.Instance.SetSelectedAbility(_daneAbility);
         PlayerActionManager.Instance.ExecuteSelectedAction();
     }
 }

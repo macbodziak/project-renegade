@@ -14,7 +14,7 @@ public abstract class Ability : ScriptableObject
     private string _description;
     [SerializeField]
     [Required]
-    private Texture _texture;
+    private Sprite _sprite;
     [SerializeField][MinValue(0)] private int _cost;
     [SerializeField]
     InputManager.State _inputState;
@@ -24,9 +24,9 @@ public abstract class Ability : ScriptableObject
 
     public string Name { get => _name; }
     public string Description { get => _description; }
-    public Texture Texture { get => _texture; }
+    public Sprite Sprite { get => _sprite; }
     public int Cost { get => _cost; }
-
+    public InputManager.State InputState { get => _inputState; }
 
     public abstract IAction GetAction();
 }
