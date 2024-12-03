@@ -27,13 +27,21 @@ public class SelectMovementTargetHandler : InputStateHandler
 
     public override void HandleInput()
     {
-        UpdateRaycastHit();
-        ScanObjectUnderCursor();
-
-
-        if (selectAction.WasPerformedThisFrame())
+        if (IsMouseOverUI() == false)
         {
-            OnMouseClicked();
+            UpdateRaycastHit();
+            ScanObjectUnderCursor();
+
+
+            if (selectAction.WasPerformedThisFrame())
+            {
+                OnMouseClicked();
+            }
+
+            if (selectFocusAction.WasPerformedThisFrame())
+            {
+                OnMouseDoubleClicked();
+            }
         }
 
         if (cancelAction.WasPerformedThisFrame())
@@ -41,10 +49,7 @@ public class SelectMovementTargetHandler : InputStateHandler
             OnCancel();
         }
 
-        if (selectFocusAction.WasPerformedThisFrame())
-        {
-            OnMouseDoubleClicked();
-        }
+
     }
 
 

@@ -26,7 +26,6 @@ public class PlayerActionManager : MonoBehaviour, IActionManager
     }
     public IAction SelectedAction { get => _selectedAction; }
     public event EventHandler<SelectedUnitChangedEventArgs> UnitSelectionChangedEvent;
-    public event EventHandler UnitSelectionCanceledEvent;
     public event EventHandler ActionExecutionStartedEvent;
     public event EventHandler ActionExecutionFinishedEvent;
 
@@ -118,7 +117,7 @@ public class PlayerActionManager : MonoBehaviour, IActionManager
             InputManager.Instance.SetState(InputManager.State.SelectUnit);
         }
         _selectedUnit = null;
-        UnitSelectionCanceledEvent?.Invoke(this, EventArgs.Empty);
+        UnitSelectionChangedEvent?.Invoke(this, new SelectedUnitChangedEventArgs(_selectedUnit, null));
     }
 
 

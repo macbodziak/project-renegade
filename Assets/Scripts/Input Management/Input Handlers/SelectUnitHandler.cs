@@ -14,12 +14,15 @@ public class SelectUnitHandler : InputStateHandler
 
     public override void HandleInput()
     {
-        UpdateRaycastHit();
-        ScanObjectUnderCursor();
-
-        if (selectAction.WasPerformedThisFrame())
+        if (IsMouseOverUI() == false)
         {
-            OnMouseClicked();
+            UpdateRaycastHit();
+            ScanObjectUnderCursor();
+
+            if (selectAction.WasPerformedThisFrame())
+            {
+                OnMouseClicked();
+            }
         }
 
         if (cancelAction.WasPerformedThisFrame())

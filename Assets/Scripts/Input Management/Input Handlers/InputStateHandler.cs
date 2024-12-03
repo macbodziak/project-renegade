@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
 
 public abstract class InputStateHandler
 {
@@ -36,6 +37,18 @@ public abstract class InputStateHandler
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         Physics.Raycast(ray, out _currentHit, Mathf.Infinity, _layerMask);
         _currentlyHitObject = _currentHit.collider == null ? null : _currentHit.collider.gameObject;
+    }
+
+    protected bool IsMouseOverUI()
+    {
+        if (EventSystem.current.IsPointerOverGameObject())
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public abstract void HandleInput();
