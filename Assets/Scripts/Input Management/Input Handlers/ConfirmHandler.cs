@@ -23,8 +23,8 @@ public class ConfirmHandler : InputStateHandler
 
     private void OnMouseClicked()
     {
-        PlayerActionManager.Instance.actionArgs.ActingUnit = PlayerActionManager.Instance.SelectedUnit;
-        PlayerActionManager.Instance.ExecuteSelectedAction();
+        ConfirmArgs args = new ConfirmArgs(PlayerActionManager.Instance.SelectedUnit);
+        PlayerActionManager.Instance.ExecuteSelectedAction(args);
     }
 
     private void OnCancel()

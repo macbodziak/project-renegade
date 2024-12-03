@@ -10,9 +10,9 @@ public class AbilityButtonController : MonoBehaviour, IPointerEnterHandler, IPoi
     Ability _ability;
     [SerializeField] Button _button;
     [SerializeField] Color _inactiveIconTint;
-    Color _activeIconTint;
+    [SerializeField] Color _activeIconTint = Color.white;
     bool _isSelected;
-    [SerializeField] bool _hovered;
+    bool _hovered;
 
     public bool IsSelected { get => _isSelected; }
     public string AbilityName { get => _ability != null ? _ability.Name : "no name"; }
@@ -27,8 +27,6 @@ public class AbilityButtonController : MonoBehaviour, IPointerEnterHandler, IPoi
         Debug.Assert(_selectionFrameImage != null);
         Debug.Assert(_parentPanel != null);
 #endif
-
-        _activeIconTint = _iconImage.color;
 
         _button.onClick.AddListener(() => _parentPanel.SetSelectedButton(this));
         _button.onClick.AddListener(() => PlayerActionManager.Instance.SetSelectedAbility(_ability));

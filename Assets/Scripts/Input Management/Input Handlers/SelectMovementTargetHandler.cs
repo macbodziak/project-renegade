@@ -21,8 +21,6 @@ public class SelectMovementTargetHandler : InputStateHandler
     public override void OnExit()
     {
         LevelManager.Instance.HidePathPreview();
-        //TODO - this is probably ot needed
-        // LevelManager.Instance.HideWalkableArea();
     }
 
     public override void HandleInput()
@@ -167,14 +165,9 @@ public class SelectMovementTargetHandler : InputStateHandler
             {
                 LevelManager.Instance.HidePathPreview();
 
-                if (PlayerActionManager.Instance.SelectedAction is MoveAction moveAction)
-                {
-                    //TODO - maybe there should be a MoveAction.SetArguments()
-                    PlayerActionManager.Instance.actionArgs.ActingUnit = PlayerActionManager.Instance.SelectedUnit;
-                    PlayerActionManager.Instance.actionArgs.Path = _path;
+                MovementArgs args = new MovementArgs(PlayerActionManager.Instance.SelectedUnit, _path);
+                PlayerActionManager.Instance.ExecuteSelectedAction(args);
 
-                    PlayerActionManager.Instance.ExecuteSelectedAction();
-                }
             }
             else
             {

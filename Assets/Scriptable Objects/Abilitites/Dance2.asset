@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Dance2
   m_EditorClassIdentifier: 
   _name: Dance 2
-  _description: "bla bla\t"
+  _description: x
   _sprite: {fileID: 21300000, guid: 55567354f3716a84dbdd75c9b297b625, type: 3}
   _cost: 1
-  _inputState: 2
+  _duration: 2.5

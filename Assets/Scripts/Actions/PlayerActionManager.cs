@@ -8,9 +8,8 @@ public class PlayerActionManager : MonoBehaviour, IActionManager
 {
     [SerializeField]
     private Unit _selectedUnit;
-    private IAction _selectedAction;
+    private Ability _selectedAbility;
     private static PlayerActionManager _instance;
-    public ActionArgs actionArgs;
     public static PlayerActionManager Instance { get { return _instance; } }
     public Unit SelectedUnit { get => _selectedUnit; }
     public int SelectedUnitNodeIndex
@@ -24,7 +23,7 @@ public class PlayerActionManager : MonoBehaviour, IActionManager
             return _selectedUnit.GetComponent<Actor>().NodeIndex;
         }
     }
-    public IAction SelectedAction { get => _selectedAction; }
+    public Ability SelectedAbility { get => _selectedAbility; }
     public event EventHandler<SelectedUnitChangedEventArgs> UnitSelectionChangedEvent;
     public event EventHandler ActionExecutionStartedEvent;
     public event EventHandler ActionExecutionFinishedEvent;
@@ -46,7 +45,6 @@ public class PlayerActionManager : MonoBehaviour, IActionManager
     private void InitializationStateOnAwake()
     {
         _selectedUnit = null;
-        actionArgs = new();
     }
 
     public void SetSelectedUnit(Unit unit)
@@ -58,16 +56,18 @@ public class PlayerActionManager : MonoBehaviour, IActionManager
 
         SelectionIndicator indicator;
         Unit previousUnit = _selectedUnit;
+
         //disable indicator of previously selected unit
         DeselectUnit();
 
         SelectUnit();
 
-        //TODO - desing proper action system
-        _selectedAction = new MoveAction();
+        //when selecting a unit, always set the selected ability to movement, which is the default ability
+        SetSelectedAbility(_selectedUnit.MoveAbility);
 
         UnitSelectionChangedEvent?.Invoke(this, new SelectedUnitChangedEventArgs(previousUnit, _selectedUnit));
 
+        //local functions:
         void DeselectUnit()
         {
             if (_selectedUnit != null)
@@ -88,25 +88,13 @@ public class PlayerActionManager : MonoBehaviour, IActionManager
             {
                 indicator.IsActive = true;
             }
-
-            DebugPrintAbilites(_selectedUnit.Abilities);
-            InputManager.Instance.SetState(InputManager.State.SelectMovementTarget);
-        }
-
-
-        void DebugPrintAbilites(List<Ability> abilities)
-        {
-            foreach (var ab in abilities)
-            {
-                Debug.Log(ab.name);
-            }
         }
     }
 
 
     public void CancelSelection()
     {
-        //TODO - also set selected action to null
+
         if (_selectedUnit != null)
         {
             SelectionIndicator indicator = _selectedUnit.GetComponent<SelectionIndicator>();
@@ -116,27 +104,23 @@ public class PlayerActionManager : MonoBehaviour, IActionManager
             }
             InputManager.Instance.SetState(InputManager.State.SelectUnit);
         }
+
         _selectedUnit = null;
+        _selectedAbility = null;
+
         UnitSelectionChangedEvent?.Invoke(this, new SelectedUnitChangedEventArgs(_selectedUnit, null));
     }
 
 
-    //TODO remove this?
-    // public void SetSelectedAction(IAction action)
-    // {
-    //     _selectedAction = action;
-    //     // InputManager.Instance.SetState()
-    // }
-
     public void SetSelectedAbility(Ability ability)
     {
-        _selectedAction = ability.GetAction();
+        _selectedAbility = ability;
         InputManager.Instance.SetState(ability.InputState);
     }
 
-    public void ExecuteSelectedAction()
+    public void ExecuteSelectedAction(AbilityArgs abilityArgs)
     {
-        if (_selectedAction == null)
+        if (_selectedAbility == null)
         {
             return;
         }
@@ -144,7 +128,7 @@ public class PlayerActionManager : MonoBehaviour, IActionManager
         InputManager.Instance.SetState(InputManager.State.InputBlocked);
         LevelManager.Instance.NullifyPlayerWalkableAreas();
         ActionExecutionStartedEvent?.Invoke(this, EventArgs.Empty);
-        _selectedAction.Execute(this, actionArgs);
+        _selectedAbility.Execute(this, abilityArgs);
 
     }
 

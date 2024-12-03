@@ -16,7 +16,7 @@ public class Unit : MonoBehaviour
     [SerializeField]
     [Sirenix.OdinInspector.ReadOnly]
     private int _currentMovementPoints;
-    // [SerializeField] ;
+    [SerializeField] private Ability _moveAbility;
     [SerializeField] private List<Ability> _abilities;
     WalkableArea _walkableAreaCache;
 
@@ -27,6 +27,7 @@ public class Unit : MonoBehaviour
     public int NodeIndex { get => _actor.NodeIndex; }
     public Animator animator { get => _animator; }
     public List<Ability> Abilities { get => _abilities; }
+    public Ability MoveAbility { get => _moveAbility; }
 
     private void Awake()
     {

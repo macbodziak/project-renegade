@@ -5,28 +5,31 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "BaseAbility", menuName = "Abilitites/Base Ability")]
 public abstract class Ability : ScriptableObject
 {
+    #region fields
     [SerializeField]
     [Required]
     private string _name;
     [SerializeField]
     [Required]
-    [TextArea(3, 6)]
+    [Multiline(3)]
     private string _description;
     [SerializeField]
-    [Required]
+    [Required, PreviewField]
     private Sprite _sprite;
     [SerializeField][MinValue(0)] private int _cost;
-    [SerializeField]
-    InputManager.State _inputState;
+    #endregion
 
 
-
-
+    #region properties
     public string Name { get => _name; }
     public string Description { get => _description; }
     public Sprite Sprite { get => _sprite; }
     public int Cost { get => _cost; }
-    public InputManager.State InputState { get => _inputState; }
+    public abstract InputManager.State InputState { get; }
+    #endregion
 
-    public abstract IAction GetAction();
+
+    #region methods
+    public abstract void Execute(IActionManager actionManager, AbilityArgs args);
+    #endregion
 }

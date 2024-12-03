@@ -600,6 +600,7 @@ MonoBehaviour:
   _isPlayer: 1
   _movementPoints: 60
   _currentMovementPoints: 0
+  _moveAbility: {fileID: 11400000, guid: d732ac6baf84a9f4db39bce63faa6ec3, type: 2}
   _abilities:
   - {fileID: 11400000, guid: cd0e61e06f14ae544900f38cad0c7b00, type: 2}
   - {fileID: 11400000, guid: 053015dd0fa7fd24497479d40ed73631, type: 2}
@@ -2441,6 +2442,8 @@ MonoBehaviour:
   _parentPanel: {fileID: 818629612}
   _button: {fileID: 425050727}
   _inactiveIconTint: {r: 0.6792453, g: 0.6792453, b: 0.6792453, a: 0.80784315}
+  _activeIconTint: {r: 1, g: 1, b: 1, a: 1}
+  _hovered: 0
 --- !u!114 &425050727
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3383,7 +3386,6 @@ GameObject:
   - component: {fileID: 661164537}
   - component: {fileID: 661164538}
   - component: {fileID: 661164539}
-  - component: {fileID: 661164540}
   m_Layer: 0
   m_Name: TESTER
   m_TagString: Untagged
@@ -3460,20 +3462,6 @@ MonoBehaviour:
   grid: {fileID: 1265778456}
   budget: 90
   mv: {fileID: 270487016}
---- !u!114 &661164540
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 661164534}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 75d6e9efc7974c44d93a44d76daada3f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _daneAbility: {fileID: 0}
-  _danceDuration: 2
 --- !u!1 &667546593
 GameObject:
   m_ObjectHideFlags: 0
@@ -3644,6 +3632,7 @@ MonoBehaviour:
   _isPlayer: 1
   _movementPoints: 60
   _currentMovementPoints: 0
+  _moveAbility: {fileID: 11400000, guid: d732ac6baf84a9f4db39bce63faa6ec3, type: 2}
   _abilities:
   - {fileID: 11400000, guid: 053015dd0fa7fd24497479d40ed73631, type: 2}
 --- !u!1 &702727898
@@ -4763,6 +4752,7 @@ MonoBehaviour:
   _isPlayer: 1
   _movementPoints: 60
   _currentMovementPoints: 0
+  _moveAbility: {fileID: 11400000, guid: d732ac6baf84a9f4db39bce63faa6ec3, type: 2}
   _abilities:
   - {fileID: 11400000, guid: 053015dd0fa7fd24497479d40ed73631, type: 2}
 --- !u!114 &897774962
@@ -14474,6 +14464,8 @@ MonoBehaviour:
   _parentPanel: {fileID: 818629612}
   _button: {fileID: 1278581388}
   _inactiveIconTint: {r: 0.6792453, g: 0.6792453, b: 0.6792453, a: 0.80784315}
+  _activeIconTint: {r: 1, g: 1, b: 1, a: 1}
+  _hovered: 0
 --- !u!114 &1278581388
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15300,6 +15292,8 @@ MonoBehaviour:
   _parentPanel: {fileID: 818629612}
   _button: {fileID: 1533507289}
   _inactiveIconTint: {r: 0.6792453, g: 0.6792453, b: 0.6792453, a: 0.80784315}
+  _activeIconTint: {r: 1, g: 1, b: 1, a: 1}
+  _hovered: 0
 --- !u!114 &1533507289
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15760,6 +15754,8 @@ MonoBehaviour:
   _parentPanel: {fileID: 818629612}
   _button: {fileID: 1713999311}
   _inactiveIconTint: {r: 0.6792453, g: 0.6792453, b: 0.6792453, a: 0.80784315}
+  _activeIconTint: {r: 1, g: 1, b: 1, a: 1}
+  _hovered: 0
 --- !u!114 &1713999311
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17646,6 +17642,8 @@ MonoBehaviour:
   _parentPanel: {fileID: 818629612}
   _button: {fileID: 2111512354}
   _inactiveIconTint: {r: 0.6792453, g: 0.6792453, b: 0.6792453, a: 0.80784315}
+  _activeIconTint: {r: 1, g: 1, b: 1, a: 1}
+  _hovered: 0
 --- !u!114 &2111512354
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17868,6 +17866,8 @@ MonoBehaviour:
   _parentPanel: {fileID: 818629612}
   _button: {fileID: 2113233426}
   _inactiveIconTint: {r: 0.6792453, g: 0.6792453, b: 0.6792453, a: 0.80784315}
+  _activeIconTint: {r: 1, g: 1, b: 1, a: 1}
+  _hovered: 0
 --- !u!1 &2122398250
 GameObject:
   m_ObjectHideFlags: 0
