@@ -17,16 +17,19 @@ public class InputManager : PersistentSingelton<InputManager>
     [SerializeField]
     [Tooltip("Layer Mask used by Input State Handlers that need to detect both units and grid")]
     LayerMask _inputLayerMask;
-    public event Action InputStateChangedEvent;
     private InputStateHandler _currentInputStateHandler;
     private State _currentState;
     private State _nextState;
     private bool _isStateChangeRequested;
 
+
     public State CurrentState
     {
         get { return _currentState; }
     }
+
+
+    public event Action InputStateChangedEvent;
 
     // this array of input hanlders must be the same as the order of enums in InputState
     // there has to be an input state class created for derived from BaseInputState
@@ -78,6 +81,12 @@ public class InputManager : PersistentSingelton<InputManager>
         }
         _nextState = state;
         _isStateChangeRequested = true;
+    }
+
+
+    public string GetInputPromptText()
+    {
+        return _currentInputStateHandler.PromptText;
     }
 
 

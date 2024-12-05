@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class InputBlockedHandler : InputStateHandler
 {
+    public override string PromptText => "";
     public InputBlockedHandler(LayerMask unitLayerMask) : base(unitLayerMask)
     {
     }

@@ -1,17 +1,28 @@
 using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LevelUIManager : MonoBehaviour
+public class HUDManager : MonoBehaviour
 {
     [SerializeField] Button _endTurnButton;
     [SerializeField] AbilitiesPanel _abilitiesPanel;
+    [SerializeField] TextMeshProUGUI _promptText;
 
     private void Start()
     {
         RegisterEventHandlers();
 
         _endTurnButton.onClick.AddListener(TurnManager.Instance.EndTurn);
+
+        LateStart();
+    }
+
+    private async void LateStart()
+    {
+        await Awaitable.EndOfFrameAsync();
+        _promptText.text = "";
+        _promptText.GetComponent<UIBlinker>()?.StartBlinking();
     }
 
     private void OnDestroy()
@@ -31,8 +42,17 @@ public class LevelUIManager : MonoBehaviour
         PlayerActionManager.Instance.ActionExecutionFinishedEvent += HandleActionExecutionFinished;
         PlayerActionManager.Instance.UnitSelectionChangedEvent += HandleUnitSelectionChanged;
 
+        InputManager.Instance.InputStateChangedEvent += HandleInputStateChanged;
+
         TurnManager.Instance.TurnEndedEvent += HandleTurnEndedEvent;
     }
+
+    private void HandleInputStateChanged()
+    {
+        string newText = InputManager.Instance.GetInputPromptText();
+        _promptText.text = newText;
+    }
+
 
     private void HandleActionExecutionStarted()
     {

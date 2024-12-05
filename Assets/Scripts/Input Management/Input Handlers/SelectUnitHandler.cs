@@ -3,6 +3,8 @@ using UnityEngine.InputSystem;
 
 public class SelectUnitHandler : InputStateHandler
 {
+    public override string PromptText => "";
+
     public SelectUnitHandler(LayerMask unitLayerMask) : base(unitLayerMask)
     {
     }
@@ -19,13 +21,13 @@ public class SelectUnitHandler : InputStateHandler
             UpdateRaycastHit();
             ScanObjectUnderCursor();
 
-            if (selectAction.WasPerformedThisFrame())
+            if (_selectAction.WasPerformedThisFrame())
             {
                 OnMouseClicked();
             }
         }
 
-        if (cancelAction.WasPerformedThisFrame())
+        if (_cancelAction.WasPerformedThisFrame())
         {
             OnCancel();
         }
@@ -44,7 +46,7 @@ public class SelectUnitHandler : InputStateHandler
                     OnPlayerUnitClicked(clickedUnit);
                 }
 
-                if (selectFocusAction.WasPerformedThisFrame())
+                if (_selectFocusAction.WasPerformedThisFrame())
                 {
                     LevelManager.Instance.CamController.Teleport(clickedUnit.transform.position);
                 }

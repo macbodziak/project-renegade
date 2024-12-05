@@ -6,6 +6,8 @@ public class SelectMovementTargetHandler : InputStateHandler
     int _previousNodeId;
     Path _path;
 
+    public override string PromptText => "select movement target";
+
     public SelectMovementTargetHandler(LayerMask unitLayerMask) : base(unitLayerMask)
     {
     }
@@ -31,18 +33,18 @@ public class SelectMovementTargetHandler : InputStateHandler
             ScanObjectUnderCursor();
 
 
-            if (selectAction.WasPerformedThisFrame())
+            if (_selectAction.WasPerformedThisFrame())
             {
                 OnMouseClicked();
             }
 
-            if (selectFocusAction.WasPerformedThisFrame())
+            if (_selectFocusAction.WasPerformedThisFrame())
             {
                 OnMouseDoubleClicked();
             }
         }
 
-        if (cancelAction.WasPerformedThisFrame())
+        if (_cancelAction.WasPerformedThisFrame())
         {
             OnCancel();
         }

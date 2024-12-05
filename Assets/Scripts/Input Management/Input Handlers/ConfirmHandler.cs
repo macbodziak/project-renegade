@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class ConfirmHandler : InputStateHandler
 {
+    public override string PromptText => "click to confirm";
+
     public ConfirmHandler(LayerMask layerMask) : base(layerMask)
     {
     }
@@ -10,12 +12,12 @@ public class ConfirmHandler : InputStateHandler
     public override void HandleInput()
     {
 
-        if (selectAction.WasPerformedThisFrame() && IsMouseOverUI() == false)
+        if (_selectAction.WasPerformedThisFrame() && IsMouseOverUI() == false)
         {
             OnMouseClicked();
         }
 
-        if (cancelAction.WasPerformedThisFrame())
+        if (_cancelAction.WasPerformedThisFrame())
         {
             OnCancel();
         }
