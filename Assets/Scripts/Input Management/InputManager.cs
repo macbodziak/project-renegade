@@ -18,7 +18,7 @@ public class InputManager : MonoBehaviour
     [Tooltip("Layer Mask used by Input State Handlers that need to detect both units and grid")]
     LayerMask _inputLayerMask;
     private static InputManager _instance;
-    public event EventHandler InputStateChangedEvent;
+    public event Action InputStateChangedEvent;
     private InputStateHandler _currentInputStateHandler;
     private State _currentState;
     private State _nextState;
@@ -71,7 +71,7 @@ public class InputManager : MonoBehaviour
         _nextState = State.None;
         _currentInputStateHandler.OnEnter();
         _isStateChangeRequested = false;
-        InputStateChangedEvent?.Invoke(this, EventArgs.Empty);
+        InputStateChangedEvent?.Invoke();
     }
 
     //

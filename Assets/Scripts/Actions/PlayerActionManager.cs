@@ -24,9 +24,10 @@ public class PlayerActionManager : MonoBehaviour, IActionManager
         }
     }
     public Ability SelectedAbility { get => _selectedAbility; }
-    public event EventHandler<SelectedUnitChangedEventArgs> UnitSelectionChangedEvent;
-    public event EventHandler ActionExecutionStartedEvent;
-    public event EventHandler ActionExecutionFinishedEvent;
+
+    public event Action<SelectedUnitChangedEventArgs> UnitSelectionChangedEvent;
+    public event Action ActionExecutionStartedEvent;
+    public event Action ActionExecutionFinishedEvent;
 
 
     private void Awake()
@@ -65,7 +66,7 @@ public class PlayerActionManager : MonoBehaviour, IActionManager
         //when selecting a unit, always set the selected ability to movement, which is the default ability
         SetSelectedAbility(_selectedUnit.MoveAbility);
 
-        UnitSelectionChangedEvent?.Invoke(this, new SelectedUnitChangedEventArgs(previousUnit, _selectedUnit));
+        UnitSelectionChangedEvent?.Invoke(new SelectedUnitChangedEventArgs(previousUnit, _selectedUnit));
 
         //local functions:
         void DeselectUnit()
@@ -108,7 +109,7 @@ public class PlayerActionManager : MonoBehaviour, IActionManager
         _selectedUnit = null;
         _selectedAbility = null;
 
-        UnitSelectionChangedEvent?.Invoke(this, new SelectedUnitChangedEventArgs(_selectedUnit, null));
+        UnitSelectionChangedEvent?.Invoke(new SelectedUnitChangedEventArgs(_selectedUnit, null));
     }
 
 
@@ -127,7 +128,7 @@ public class PlayerActionManager : MonoBehaviour, IActionManager
 
         InputManager.Instance.SetState(InputManager.State.InputBlocked);
         LevelManager.Instance.NullifyPlayerWalkableAreas();
-        ActionExecutionStartedEvent?.Invoke(this, EventArgs.Empty);
+        ActionExecutionStartedEvent?.Invoke();
         _selectedAbility.Execute(this, abilityArgs);
 
     }
@@ -136,6 +137,6 @@ public class PlayerActionManager : MonoBehaviour, IActionManager
     public void OnSelectedAcionCompleted()
     {
         InputManager.Instance.SetState(InputManager.State.SelectMovementTarget);
-        ActionExecutionFinishedEvent?.Invoke(this, EventArgs.Empty);
+        ActionExecutionFinishedEvent?.Invoke();
     }
 }

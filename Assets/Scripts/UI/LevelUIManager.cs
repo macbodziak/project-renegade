@@ -34,12 +34,12 @@ public class LevelUIManager : MonoBehaviour
         TurnManager.Instance.TurnEndedEvent += HandleTurnEndedEvent;
     }
 
-    private void HandleActionExecutionStarted(object sender, EventArgs eventArgs)
+    private void HandleActionExecutionStarted()
     {
         DisablePlayerInteraction();
     }
 
-    private void HandleActionExecutionFinished(object sender, EventArgs eventArgs)
+    private void HandleActionExecutionFinished()
     {
         EnablePlayerInteraction();
         _abilitiesPanel.Reset();
@@ -70,7 +70,7 @@ public class LevelUIManager : MonoBehaviour
     }
 
 
-    private void HandleUnitSelectionChanged(object sender, SelectedUnitChangedEventArgs e)
+    private void HandleUnitSelectionChanged(SelectedUnitChangedEventArgs e)
     {
         if (e.CurrentUnit != null)
         {

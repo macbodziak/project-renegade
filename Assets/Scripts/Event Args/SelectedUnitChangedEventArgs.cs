@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class SelectedUnitChangedEventArgs
+public struct SelectedUnitChangedEventArgs
 {
     Unit _previousUnit;
     Unit _currentUnit;
