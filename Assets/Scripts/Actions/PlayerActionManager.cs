@@ -4,13 +4,11 @@ using System.Collections.Generic;
 using Navigation;
 using UnityEngine;
 
-public class PlayerActionManager : MonoBehaviour, IActionManager
+public class PlayerActionManager : PersistentSingelton<PlayerActionManager>, IActionManager
 {
     [SerializeField]
     private Unit _selectedUnit;
     private Ability _selectedAbility;
-    private static PlayerActionManager _instance;
-    public static PlayerActionManager Instance { get { return _instance; } }
     public Unit SelectedUnit { get => _selectedUnit; }
     public int SelectedUnitNodeIndex
     {
@@ -30,20 +28,7 @@ public class PlayerActionManager : MonoBehaviour, IActionManager
     public event Action ActionExecutionFinishedEvent;
 
 
-    private void Awake()
-    {
-        if (_instance != null && _instance != this)
-        {
-            Destroy(this.gameObject);
-        }
-        else
-        {
-            _instance = this;
-            InitializationStateOnAwake();
-        }
-    }
-
-    private void InitializationStateOnAwake()
+    protected override void InitializeOnAwake()
     {
         _selectedUnit = null;
     }

@@ -2,29 +2,16 @@ using System;
 using TMPro;
 using UnityEngine;
 
-public class TurnManager : MonoBehaviour
+public class TurnManager : PersistentSingelton<TurnManager>
 {
-    static TurnManager _instance;
     bool _isPlayerTurn;
 
-    public event EventHandler<bool> TurnEndedEvent;
-    public static TurnManager Instance { get => _instance; }
+    public event Action<bool> TurnEndedEvent;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    private void Awake()
-    {
-        if (_instance != null && _instance != this)
-        {
-            Destroy(this);
-        }
-        else
-        {
-            _instance = this;
-            InitializeOnAwake();
-        }
-    }
 
-    private void InitializeOnAwake()
+
+    protected override void InitializeOnAwake()
     {
         _isPlayerTurn = true;
     }
@@ -43,7 +30,7 @@ public class TurnManager : MonoBehaviour
             _isPlayerTurn = true;
         }
 
-        TurnEndedEvent?.Invoke(this, _isPlayerTurn);
+        TurnEndedEvent?.Invoke(_isPlayerTurn);
     }
 
     private void StartPlayerTurn()

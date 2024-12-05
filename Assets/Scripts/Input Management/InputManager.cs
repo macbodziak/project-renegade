@@ -3,7 +3,7 @@ using System;
 using UnityEditor;
 using System.Collections.Generic;
 
-public class InputManager : MonoBehaviour
+public class InputManager : PersistentSingelton<InputManager>
 {
     public enum State
     {
@@ -17,7 +17,6 @@ public class InputManager : MonoBehaviour
     [SerializeField]
     [Tooltip("Layer Mask used by Input State Handlers that need to detect both units and grid")]
     LayerMask _inputLayerMask;
-    private static InputManager _instance;
     public event Action InputStateChangedEvent;
     private InputStateHandler _currentInputStateHandler;
     private State _currentState;
@@ -33,20 +32,12 @@ public class InputManager : MonoBehaviour
     // there has to be an input state class created for derived from BaseInputState
     private List<InputStateHandler> inputHandlers;
 
-    public static InputManager Instance { get { return _instance; } }
-    private void Awake()
+    protected override void InitializeOnAwake()
     {
-        if (_instance != null && _instance != this)
-        {
-            Destroy(this.gameObject);
-        }
-        else
-        {
-            _instance = this;
-            InitializeInputHanlders();
-            InitializationStateOnAwake();
-        }
+        InitializeInputHanlders();
+        InitializationStateOnAwake();
     }
+
 
     private void Update()
     {
@@ -116,6 +107,7 @@ public class InputManager : MonoBehaviour
     {
         GUI.Label(new Rect(25, 25, 200, 30), $"{_currentInputStateHandler}");
     }
+
 #endif
 }
 

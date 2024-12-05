@@ -45,7 +45,7 @@ public class LevelUIManager : MonoBehaviour
         _abilitiesPanel.Reset();
     }
 
-    private void HandleTurnEndedEvent(object sender, bool isPlayerTurn)
+    private void HandleTurnEndedEvent(bool isPlayerTurn)
     {
         if (isPlayerTurn)
         {

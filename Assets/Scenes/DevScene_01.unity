@@ -2443,7 +2443,6 @@ MonoBehaviour:
   _button: {fileID: 425050727}
   _inactiveIconTint: {r: 0.6792453, g: 0.6792453, b: 0.6792453, a: 0.80784315}
   _activeIconTint: {r: 1, g: 1, b: 1, a: 1}
-  _hovered: 0
 --- !u!114 &425050727
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3853,12 +3852,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 762656925}
-  - component: {fileID: 762656926}
-  - component: {fileID: 762656927}
   - component: {fileID: 762656928}
-  - component: {fileID: 762656929}
   m_Layer: 0
-  m_Name: MANAGERS
+  m_Name: Level Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3879,34 +3875,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &762656926
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 762656923}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a062d710063a62a498d6aa93ee43e9cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _selectedUnit: {fileID: 0}
---- !u!114 &762656927
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 762656923}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5bc69184a997c1043bda8bb952003160, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _inputLayerMask:
-    serializedVersion: 2
-    m_Bits: 320
 --- !u!114 &762656928
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3923,18 +3891,6 @@ MonoBehaviour:
   _pathVisualizer: {fileID: 465066266}
   _camController: {fileID: 1771965376}
   _playerUnits: []
---- !u!114 &762656929
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 762656923}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1dab0a071c6007242b99776e9d8d5fa0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &769932582
 GameObject:
   m_ObjectHideFlags: 0
@@ -14465,7 +14421,6 @@ MonoBehaviour:
   _button: {fileID: 1278581388}
   _inactiveIconTint: {r: 0.6792453, g: 0.6792453, b: 0.6792453, a: 0.80784315}
   _activeIconTint: {r: 1, g: 1, b: 1, a: 1}
-  _hovered: 0
 --- !u!114 &1278581388
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15293,7 +15248,6 @@ MonoBehaviour:
   _button: {fileID: 1533507289}
   _inactiveIconTint: {r: 0.6792453, g: 0.6792453, b: 0.6792453, a: 0.80784315}
   _activeIconTint: {r: 1, g: 1, b: 1, a: 1}
-  _hovered: 0
 --- !u!114 &1533507289
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15755,7 +15709,6 @@ MonoBehaviour:
   _button: {fileID: 1713999311}
   _inactiveIconTint: {r: 0.6792453, g: 0.6792453, b: 0.6792453, a: 0.80784315}
   _activeIconTint: {r: 1, g: 1, b: 1, a: 1}
-  _hovered: 0
 --- !u!114 &1713999311
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17643,7 +17596,6 @@ MonoBehaviour:
   _button: {fileID: 2111512354}
   _inactiveIconTint: {r: 0.6792453, g: 0.6792453, b: 0.6792453, a: 0.80784315}
   _activeIconTint: {r: 1, g: 1, b: 1, a: 1}
-  _hovered: 0
 --- !u!114 &2111512354
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17867,7 +17819,6 @@ MonoBehaviour:
   _button: {fileID: 2113233426}
   _inactiveIconTint: {r: 0.6792453, g: 0.6792453, b: 0.6792453, a: 0.80784315}
   _activeIconTint: {r: 1, g: 1, b: 1, a: 1}
-  _hovered: 0
 --- !u!1 &2122398250
 GameObject:
   m_ObjectHideFlags: 0
