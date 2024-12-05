@@ -33,18 +33,18 @@ public class SelectMovementTargetHandler : InputStateHandler
             ScanObjectUnderCursor();
 
 
-            if (_selectAction.WasPerformedThisFrame())
+            if (_selectInputAction.WasPerformedThisFrame())
             {
                 OnMouseClicked();
             }
 
-            if (_selectFocusAction.WasPerformedThisFrame())
+            if (_selectFocusInputAction.WasPerformedThisFrame())
             {
                 OnMouseDoubleClicked();
             }
         }
 
-        if (_cancelAction.WasPerformedThisFrame())
+        if (_cancelInputAction.WasPerformedThisFrame())
         {
             OnCancel();
         }

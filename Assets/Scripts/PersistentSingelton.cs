@@ -12,11 +12,12 @@ public abstract class PersistentSingelton<T> : MonoBehaviour where T : MonoBehav
     {
         if (_instance != null && _instance != this)
         {
-            Destroy(this.gameObject);
+            Destroy(this);
         }
         else
         {
             _instance = this as T;
+            transform.SetParent(null);
             DontDestroyOnLoad(gameObject);
             InitializeOnAwake();
         }

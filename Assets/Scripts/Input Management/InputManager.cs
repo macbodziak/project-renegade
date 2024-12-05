@@ -9,6 +9,7 @@ public class InputManager : PersistentSingelton<InputManager>
     {
         SelectUnit,
         SelectMovementTarget,
+        SelectSingleMeleeTarget,
         Confirm,
         InputBlocked,
         None
@@ -96,6 +97,7 @@ public class InputManager : PersistentSingelton<InputManager>
         {
             new SelectUnitHandler(_inputLayerMask),
             new SelectMovementTargetHandler(_inputLayerMask),
+            new SelectSingleMeleeTargetHandler(_inputLayerMask),
             new ConfirmHandler(0),
             new InputBlockedHandler(0)
         };

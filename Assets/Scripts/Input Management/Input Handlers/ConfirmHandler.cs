@@ -12,12 +12,12 @@ public class ConfirmHandler : InputStateHandler
     public override void HandleInput()
     {
 
-        if (_selectAction.WasPerformedThisFrame() && IsMouseOverUI() == false)
+        if (_selectInputAction.WasPerformedThisFrame() && IsMouseOverUI() == false)
         {
             OnMouseClicked();
         }
 
-        if (_cancelAction.WasPerformedThisFrame())
+        if (_cancelInputAction.WasPerformedThisFrame())
         {
             OnCancel();
         }

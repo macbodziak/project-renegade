@@ -9,9 +9,9 @@ public abstract class InputStateHandler
     protected RaycastHit _previousHit;
     protected GameObject _previouslyHitObject;
     protected GameObject _currentlyHitObject;
-    protected InputAction _selectAction;
-    protected InputAction _selectFocusAction;
-    protected InputAction _cancelAction;
+    protected InputAction _selectInputAction;
+    protected InputAction _selectFocusInputAction;
+    protected InputAction _cancelInputAction;
 
     public abstract string PromptText { get; }
 
@@ -20,14 +20,14 @@ public abstract class InputStateHandler
     {
         _layerMask = layerMask;
 
-        _selectAction = InputSystem.actions.FindAction("Select");
-        _selectFocusAction = InputSystem.actions.FindAction("SelectAndFocus");
-        _cancelAction = InputSystem.actions.FindAction("Cancel");
+        _selectInputAction = InputSystem.actions.FindAction("Select");
+        _selectFocusInputAction = InputSystem.actions.FindAction("SelectAndFocus");
+        _cancelInputAction = InputSystem.actions.FindAction("Cancel");
 
 #if DEBUG
-        Debug.Assert(_selectAction != null);
-        Debug.Assert(_cancelAction != null);
-        Debug.Assert(_selectFocusAction != null);
+        Debug.Assert(_selectInputAction != null);
+        Debug.Assert(_cancelInputAction != null);
+        Debug.Assert(_selectFocusInputAction != null);
 #endif
     }
 

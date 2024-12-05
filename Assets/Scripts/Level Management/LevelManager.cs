@@ -16,8 +16,6 @@ public class LevelManager : MonoBehaviour
     CameraController _camController;
     NavGrid _grid;
     private static LevelManager _instance;
-    [SerializeField]
-    [Sirenix.OdinInspector.ReadOnly]
     private List<Unit> _playerUnits;
     private List<Unit> _enemyUnits;
 
@@ -63,6 +61,9 @@ public class LevelManager : MonoBehaviour
 
     private void InitilizeUnitList()
     {
+        _playerUnits = new();
+        _enemyUnits = new();
+
         Unit unit;
 
         List<Actor> actors = _grid.GetActors();

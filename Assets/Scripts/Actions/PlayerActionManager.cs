@@ -8,6 +8,7 @@ public class PlayerActionManager : PersistentSingelton<PlayerActionManager>, IAc
 {
     [SerializeField]
     private Unit _selectedUnit;
+    [SerializeField]
     private Ability _selectedAbility;
     public Unit SelectedUnit { get => _selectedUnit; }
     public int SelectedUnitNodeIndex
@@ -101,7 +102,15 @@ public class PlayerActionManager : PersistentSingelton<PlayerActionManager>, IAc
     public void SetSelectedAbility(Ability ability)
     {
         _selectedAbility = ability;
-        InputManager.Instance.SetState(ability.InputState);
+
+        if (_selectedAbility != null)
+        {
+            InputManager.Instance.SetState(ability.InputState);
+        }
+        else
+        {
+            InputManager.Instance.SetState(InputManager.State.SelectUnit);
+        }
     }
 
     public void ExecuteSelectedAction(AbilityArgs abilityArgs)
@@ -121,6 +130,14 @@ public class PlayerActionManager : PersistentSingelton<PlayerActionManager>, IAc
 
     public void OnSelectedAcionCompleted()
     {
+        if (_selectedUnit != null)
+        {
+            SetSelectedAbility(_selectedUnit.MoveAbility);
+        }
+        else
+        {
+            SetSelectedAbility(null);
+        }
         InputManager.Instance.SetState(InputManager.State.SelectMovementTarget);
         ActionExecutionFinishedEvent?.Invoke();
     }

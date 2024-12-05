@@ -28,6 +28,7 @@ public class Unit : MonoBehaviour
     public Animator animator { get => _animator; }
     public List<Ability> Abilities { get => _abilities; }
     public Ability MoveAbility { get => _moveAbility; }
+    public Vector3 WorldPosition { get => transform.position; }
 
     private void Awake()
     {

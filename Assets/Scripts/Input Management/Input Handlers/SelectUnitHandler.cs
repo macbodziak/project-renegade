@@ -21,13 +21,13 @@ public class SelectUnitHandler : InputStateHandler
             UpdateRaycastHit();
             ScanObjectUnderCursor();
 
-            if (_selectAction.WasPerformedThisFrame())
+            if (_selectInputAction.WasPerformedThisFrame())
             {
                 OnMouseClicked();
             }
         }
 
-        if (_cancelAction.WasPerformedThisFrame())
+        if (_cancelInputAction.WasPerformedThisFrame())
         {
             OnCancel();
         }
@@ -46,7 +46,7 @@ public class SelectUnitHandler : InputStateHandler
                     OnPlayerUnitClicked(clickedUnit);
                 }
 
-                if (_selectFocusAction.WasPerformedThisFrame())
+                if (_selectFocusInputAction.WasPerformedThisFrame())
                 {
                     LevelManager.Instance.CamController.Teleport(clickedUnit.transform.position);
                 }

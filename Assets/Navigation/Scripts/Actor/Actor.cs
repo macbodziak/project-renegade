@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.ComponentModel;
+using System.Threading.Tasks;
 
 namespace Navigation
 {
@@ -208,17 +209,13 @@ namespace Navigation
         }
 
 
-        public void FaceTowards(Vector3 worldPosition)
+        public async Task FaceTowards(Vector3 worldPosition)
         {
             if (_state != ActorState.Idle)
             {
                 return;
             }
-            StartCoroutine(FaceTowardsCoroutine(worldPosition));
-        }
 
-        private IEnumerator FaceTowardsCoroutine(Vector3 worldPosition)
-        {
             _state = ActorState.Moving;
             Quaternion startRotation = transform.rotation;
             Quaternion targetRotation = Quaternion.LookRotation(worldPosition - transform.position);
@@ -228,10 +225,10 @@ namespace Navigation
             {
                 transform.rotation = Quaternion.Slerp(startRotation, targetRotation, progress);
                 progress += _rotationSpeed * _speedModifier * Time.deltaTime;
-                yield return null;
+                await Awaitable.NextFrameAsync();
             }
             _state = ActorState.Idle;
-            yield return null;
+            await Awaitable.NextFrameAsync();
         }
 
         public void FaceTowardsInstantly(Vector3 worldPosition)
