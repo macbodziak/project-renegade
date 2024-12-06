@@ -81,7 +81,6 @@ public class LevelManager : MonoBehaviour
                     _enemyUnits.Add(unit);
                 }
             }
-
         }
     }
 

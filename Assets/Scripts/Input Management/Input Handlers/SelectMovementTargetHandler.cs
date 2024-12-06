@@ -3,8 +3,9 @@ using UnityEngine;
 
 public class SelectMovementTargetHandler : InputStateHandler
 {
-    int _previousNodeId;
+    int _hoveredNodeId;
     Path _path;
+    WalkableArea _area;
 
     public override string PromptText => "select movement target";
 
@@ -14,15 +15,15 @@ public class SelectMovementTargetHandler : InputStateHandler
 
     public override void OnEnter()
     {
-        _previousNodeId = -1;
         _path = null;
-        WalkableArea area = PlayerActionManager.Instance.SelectedUnit.GetWalkableArea();
-        LevelManager.Instance.ShowWalkableArea(PlayerActionManager.Instance.SelectedUnit.GetWalkableArea());
+        _area = PlayerActionManager.Instance.SelectedUnit.GetWalkableArea();
+        LevelManager.Instance.ShowWalkableArea(_area);
     }
 
     public override void OnExit()
     {
         LevelManager.Instance.HidePathPreview();
+        _area = null;
     }
 
     public override void HandleInput()
@@ -107,11 +108,11 @@ public class SelectMovementTargetHandler : InputStateHandler
             }
         }
 
-        NavGrid grid = gameObject.GetComponent<NavGrid>();
-        if (grid != null)
-        {
-            OnMouseEnterGrid(grid);
-        }
+        // NavGrid grid = gameObject.GetComponent<NavGrid>();
+        // if (grid != null)
+        // {
+        //     OnMouseEnterGrid(grid);
+        // }
     }
 
     protected override void OnMouseExitObject(GameObject gameObject)
@@ -145,7 +146,8 @@ public class SelectMovementTargetHandler : InputStateHandler
         {
             PlayerActionManager.Instance.SelectUnit(unit);
             LevelManager.Instance.HidePathPreview();
-            LevelManager.Instance.ShowWalkableArea(PlayerActionManager.Instance.SelectedUnit.GetWalkableArea());
+            _area = unit.GetWalkableArea();
+            LevelManager.Instance.ShowWalkableArea(_area);
             _path = null;
         }
     }
@@ -159,44 +161,38 @@ public class SelectMovementTargetHandler : InputStateHandler
     {
         int nodeId = grid.IndexAt(_currentHit.point);
 
-        WalkableArea area = PlayerActionManager.Instance.SelectedUnit.GetWalkableArea();
-
-        if (area != null && area.ContainsNode(nodeId))
+        if (_area != null && _area.ContainsNode(nodeId))
         {
-            if (_previousNodeId == nodeId)
-            {
-                LevelManager.Instance.HidePathPreview();
+            LevelManager.Instance.HidePathPreview();
 
-                MovementArgs args = new MovementArgs(PlayerActionManager.Instance.SelectedUnit, _path);
-                PlayerActionManager.Instance.ExecuteSelectedAction(args);
-
-            }
-            else
-            {
-                Actor actor = PlayerActionManager.Instance.SelectedUnit.gameObject.GetComponent<Actor>();
-                if (actor != null)
-                {
-                    _path = Pathfinder.FindPath(LevelManager.Instance.Grid, actor.NodeIndex, nodeId);
-                    LevelManager.Instance.ShowPathPreview(_path);
-                    _previousNodeId = nodeId;
-                }
-            }
+            MovementArgs args = new MovementArgs(PlayerActionManager.Instance.SelectedUnit, _path);
+            PlayerActionManager.Instance.ExecuteSelectedAction(args);
         }
-
     }
 
-    private void OnMouseEnterGrid(NavGrid grid)
-    {
-        int nodeId = grid.IndexAt(_currentHit.point);
-        Vector2 gridCoord = grid.GridCoordinatesAt(_currentHit.point);
-        Vector3 worldPosition = _currentHit.point;
-    }
 
     private void OnMouseExitGrid(NavGrid grid)
     {
+        LevelManager.Instance.HidePathPreview();
     }
 
     private void OnMouseStayOverGrid(NavGrid grid)
     {
+        int currentNodeId = grid.IndexAt(_currentHit.point);
+
+        if (_hoveredNodeId != currentNodeId)
+        {
+
+            if (_area != null && _area.ContainsNode(currentNodeId))
+            {
+                _path = _area.GetPathFromNodeIndex(currentNodeId);
+                LevelManager.Instance.ShowPathPreview(_path);
+            }
+            else
+            {
+                LevelManager.Instance.HidePathPreview();
+            }
+        }
+        _hoveredNodeId = currentNodeId;
     }
 }
