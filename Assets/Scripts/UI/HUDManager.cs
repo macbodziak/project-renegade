@@ -32,6 +32,7 @@ public class HUDManager : MonoBehaviour
             PlayerActionManager.Instance.ActionExecutionStartedEvent -= HandleActionExecutionStarted;
             PlayerActionManager.Instance.ActionExecutionFinishedEvent -= HandleActionExecutionFinished;
             PlayerActionManager.Instance.UnitSelectionChangedEvent -= HandleUnitSelectionChanged;
+            PlayerActionManager.Instance.SelectedAbilityChangedEvent -= HandleSelectedAbilityChanged;
         }
     }
 
@@ -41,10 +42,16 @@ public class HUDManager : MonoBehaviour
         PlayerActionManager.Instance.ActionExecutionStartedEvent += HandleActionExecutionStarted;
         PlayerActionManager.Instance.ActionExecutionFinishedEvent += HandleActionExecutionFinished;
         PlayerActionManager.Instance.UnitSelectionChangedEvent += HandleUnitSelectionChanged;
+        PlayerActionManager.Instance.SelectedAbilityChangedEvent += HandleSelectedAbilityChanged;
 
         InputManager.Instance.InputStateChangedEvent += HandleInputStateChanged;
 
         TurnManager.Instance.TurnEndedEvent += HandleTurnEndedEvent;
+    }
+
+    private void HandleSelectedAbilityChanged(SelectedAbilityChangedEventArgs args)
+    {
+        _abilitiesPanel.SetSelectedAbility(args.CurrentAbility);
     }
 
     private void HandleInputStateChanged()
@@ -62,7 +69,7 @@ public class HUDManager : MonoBehaviour
     private void HandleActionExecutionFinished()
     {
         EnablePlayerInteraction();
-        _abilitiesPanel.Reset();
+        // _abilitiesPanel.Reset();
     }
 
     private void HandleTurnEndedEvent(bool isPlayerTurn)
@@ -70,6 +77,7 @@ public class HUDManager : MonoBehaviour
         if (isPlayerTurn)
         {
             EnablePlayerInteraction();
+            _abilitiesPanel.Reset();
         }
         else
         {

@@ -8,8 +8,6 @@ public class TurnManager : PersistentSingelton<TurnManager>
 
     public event Action<bool> TurnEndedEvent;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-
 
     protected override void InitializeOnAwake()
     {
@@ -38,7 +36,8 @@ public class TurnManager : PersistentSingelton<TurnManager>
         RefreshPlayerUnits();
         if (PlayerActionManager.Instance.SelectedUnit != null)
         {
-            InputManager.Instance.SetState(InputManager.State.SelectMovementTarget);
+            PlayerActionManager.Instance.SetSelectedAbility(PlayerActionManager.Instance.SelectedUnit.MoveAbility);
+            //TODO reset UI ability panel
         }
         else
         {

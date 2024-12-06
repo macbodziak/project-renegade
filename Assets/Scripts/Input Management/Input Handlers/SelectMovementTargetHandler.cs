@@ -143,7 +143,7 @@ public class SelectMovementTargetHandler : InputStateHandler
     {
         if (unit != PlayerActionManager.Instance.SelectedUnit)
         {
-            PlayerActionManager.Instance.SetSelectedUnit(unit);
+            PlayerActionManager.Instance.SelectUnit(unit);
             LevelManager.Instance.HidePathPreview();
             LevelManager.Instance.ShowWalkableArea(PlayerActionManager.Instance.SelectedUnit.GetWalkableArea());
             _path = null;
@@ -152,7 +152,7 @@ public class SelectMovementTargetHandler : InputStateHandler
 
     private void OnCancel()
     {
-        PlayerActionManager.Instance.CancelSelection();
+        PlayerActionManager.Instance.SelectUnit(null);
     }
 
     private void OnGridClicked(NavGrid grid)

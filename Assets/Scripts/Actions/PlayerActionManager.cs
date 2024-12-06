@@ -10,7 +10,9 @@ public class PlayerActionManager : PersistentSingelton<PlayerActionManager>, IAc
     private Unit _selectedUnit;
     [SerializeField]
     private Ability _selectedAbility;
+
     public Unit SelectedUnit { get => _selectedUnit; }
+    public Ability SelectedAbility { get => _selectedAbility; }
     public int SelectedUnitNodeIndex
     {
         get
@@ -22,88 +24,78 @@ public class PlayerActionManager : PersistentSingelton<PlayerActionManager>, IAc
             return _selectedUnit.GetComponent<Actor>().NodeIndex;
         }
     }
-    public Ability SelectedAbility { get => _selectedAbility; }
+
 
     public event Action<SelectedUnitChangedEventArgs> UnitSelectionChangedEvent;
+    public event Action<SelectedAbilityChangedEventArgs> SelectedAbilityChangedEvent;
     public event Action ActionExecutionStartedEvent;
     public event Action ActionExecutionFinishedEvent;
 
-
+    /// <summary>
+    /// Initializes the PlayerActionManager and sets the selected unit to null upon awakening.
+    /// </summary>
     protected override void InitializeOnAwake()
     {
         _selectedUnit = null;
     }
 
-    public void SetSelectedUnit(Unit unit)
+
+    /// <summary>
+    /// Selects a unit, updates the selection indicator, raises the selection change event, 
+    /// and sets the default ability to the unit's movement ability if a unit is selected.
+    /// </summary>
+    /// <param name="unit">The unit to select. Pass null to deselect the current unit.</param>
+    public void SelectUnit(Unit unit)
     {
-        if (unit == _selectedUnit)
-        {
-            return;
-        }
+        if (unit == _selectedUnit) return;
 
         SelectionIndicator indicator;
-        Unit previousUnit = _selectedUnit;
+        Unit previousUnit = null;
 
-        //disable indicator of previously selected unit
-        DeselectUnit();
-
-        SelectUnit();
-
-        //when selecting a unit, always set the selected ability to movement, which is the default ability
-        SetSelectedAbility(_selectedUnit.MoveAbility);
-
-        UnitSelectionChangedEvent?.Invoke(new SelectedUnitChangedEventArgs(previousUnit, _selectedUnit));
-
-        //local functions:
-        void DeselectUnit()
+        //deselect previous unit if one was selected
+        if (_selectedUnit != null)
         {
-            if (_selectedUnit != null)
+            previousUnit = _selectedUnit;
+            indicator = _selectedUnit.GetComponent<SelectionIndicator>();
+            if (indicator != null)
             {
-                indicator = _selectedUnit.GetComponent<SelectionIndicator>();
-                if (indicator != null)
-                {
-                    indicator.IsActive = false;
-                }
+                indicator.IsActive = false;
             }
+            _selectedUnit = null;
         }
 
-        void SelectUnit()
+        _selectedUnit = unit;
+
+        if (_selectedUnit == null)
         {
-            _selectedUnit = unit;
+            //unselect ability
+            SetSelectedAbility(null);
+        }
+        else
+        {
+            //activate the selection indicator
             indicator = _selectedUnit.GetComponent<SelectionIndicator>();
             if (indicator != null)
             {
                 indicator.IsActive = true;
             }
+
+            //set the default ability to movement
+            SetSelectedAbility(_selectedUnit.MoveAbility);
         }
+
+        //raise event 
+        UnitSelectionChangedEvent?.Invoke(new SelectedUnitChangedEventArgs(previousUnit, _selectedUnit));
     }
 
 
-    public void CancelSelection()
-    {
-
-        if (_selectedUnit != null)
-        {
-            SelectionIndicator indicator = _selectedUnit.GetComponent<SelectionIndicator>();
-            if (indicator != null)
-            {
-                indicator.IsActive = false;
-            }
-            InputManager.Instance.SetState(InputManager.State.SelectUnit);
-        }
-
-        _selectedUnit = null;
-        _selectedAbility = null;
-
-        UnitSelectionChangedEvent?.Invoke(new SelectedUnitChangedEventArgs(_selectedUnit, null));
-    }
-
-
+    /// <summary>
+    /// Updates the currently selected ability and adjusts the input state accordingly.
+    /// </summary>
+    /// <param name="ability">The ability to set as the currently selected ability. Pass null to deselect the ability.</param>
     public void SetSelectedAbility(Ability ability)
     {
-        _selectedAbility = ability;
-
-        if (_selectedAbility != null)
+        if (ability != null)
         {
             InputManager.Instance.SetState(ability.InputState);
         }
@@ -111,7 +103,22 @@ public class PlayerActionManager : PersistentSingelton<PlayerActionManager>, IAc
         {
             InputManager.Instance.SetState(InputManager.State.SelectUnit);
         }
+
+        if (_selectedAbility == ability) return;
+
+        Ability previousAbility = _selectedAbility;
+
+        _selectedAbility = ability;
+
+        SelectedAbilityChangedEvent?.Invoke(new SelectedAbilityChangedEventArgs(previousAbility, _selectedAbility));
     }
+
+
+    /// <summary>
+    /// Executes the currently selected action with the provided ability arguments.
+    /// Blocks user input and triggers the action execution events.
+    /// </summary>
+    /// <param name="abilityArgs">Arguments required for the selected ability to execute.</param>
 
     public void ExecuteSelectedAction(AbilityArgs abilityArgs)
     {
@@ -121,24 +128,29 @@ public class PlayerActionManager : PersistentSingelton<PlayerActionManager>, IAc
         }
 
         InputManager.Instance.SetState(InputManager.State.InputBlocked);
-        LevelManager.Instance.NullifyPlayerWalkableAreas();
         ActionExecutionStartedEvent?.Invoke();
         _selectedAbility.Execute(this, abilityArgs);
 
     }
 
 
+    /// <summary>
+    /// Finalizes the execution of the selected action by resetting the default ability to movement, 
+    /// setting the input state, clearing walkable areas, and triggering the action completion event.
+    /// </summary>
     public void OnSelectedAcionCompleted()
     {
         if (_selectedUnit != null)
         {
             SetSelectedAbility(_selectedUnit.MoveAbility);
+            // InputManager.Instance.SetState(InputManager.State.SelectMovementTarget);
         }
         else
         {
             SetSelectedAbility(null);
+            // InputManager.Instance.SetState(InputManager.State.SelectUnit);
         }
-        InputManager.Instance.SetState(InputManager.State.SelectMovementTarget);
+        LevelManager.Instance.NullifyPlayerWalkableAreas();
         ActionExecutionFinishedEvent?.Invoke();
     }
 }

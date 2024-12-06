@@ -145,4 +145,30 @@ public class AbilitiesPanel : MonoBehaviour
         }
     }
 
+
+    public void SetSelectedAbility(Ability ability)
+    {
+        foreach (var button in _abilityButtons)
+        {
+            if (button.Ability == ability)
+            {
+                button.SetSelected(true);
+            }
+            else
+            {
+                button.SetSelected(false);
+            }
+        }
+
+        if (_hoveredButton == null)
+        {
+            HideAbilityName();
+        }
+        else
+        {
+            UpdateAbilityName(_hoveredButton.AbilityName);
+            ShowAbilityName();
+        }
+    }
+
 }
