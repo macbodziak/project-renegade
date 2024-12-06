@@ -91,7 +91,7 @@ namespace Navigation
             _state = ActorState.Uninitilized;
         }
 
-        public void MoveAlongPath(Path path)
+        public async Task MoveAlongPath(Path path)
         {
             if (path == null)
             {
@@ -105,11 +105,6 @@ namespace Navigation
 
             _path = path;
 
-            StartCoroutine(MoveAlongPathCoroutine());
-        }
-
-        private IEnumerator MoveAlongPathCoroutine()
-        {
             OnMovementStarted();
 
             Quaternion previousRotation = transform.rotation;
@@ -135,7 +130,7 @@ namespace Navigation
                         transform.position = Vector3.MoveTowards(transform.position, _targetPosition, delta);
                         transform.rotation = Quaternion.Slerp(previousRotation, _targetRotation, rotationProgress);
                     }
-                    yield return null;
+                    await Awaitable.NextFrameAsync();
                 }
 
                 OnNodeEntered();
@@ -150,6 +145,49 @@ namespace Navigation
             }
             MovementFinishedEvent?.Invoke(this, new ActorFinishedMovementEventArgs(_currentNodeIndex));
         }
+
+        // private IEnumerator MoveAlongPathCoroutine()
+        // {
+        //     OnMovementStarted();
+
+        //     Quaternion previousRotation = transform.rotation;
+        //     float rotationProgress = 0f;
+
+        //     while (_pathIndex < _path.Count)
+        //     {
+        //         _previousNodeIndex = _currentNodeIndex;
+        //         _currentNodeIndex = _path[_pathIndex].nodeIndex;
+        //         OnNodeExiting();
+
+        //         _targetPosition = _path[_pathIndex].worldPosition;
+
+        //         UpdateRotationTarget(ref rotationProgress, ref previousRotation);
+
+
+        //         while (transform.position != _targetPosition)
+        //         {
+        //             if (_state == ActorState.Moving)
+        //             {
+        //                 float delta = _speed * _speedModifier * Time.deltaTime;
+        //                 rotationProgress += _rotationSpeed * _speedModifier * Time.deltaTime;
+        //                 transform.position = Vector3.MoveTowards(transform.position, _targetPosition, delta);
+        //                 transform.rotation = Quaternion.Slerp(previousRotation, _targetRotation, rotationProgress);
+        //             }
+        //             yield return null;
+        //         }
+
+        //         OnNodeEntered();
+
+        //         _pathIndex++;
+
+        //         if (_cancelFlag || _pathIndex == _path.Count)
+        //         {
+        //             _cancelFlag = false;
+        //             _state = ActorState.Idle;
+        //         }
+        //     }
+        //     MovementFinishedEvent?.Invoke(this, new ActorFinishedMovementEventArgs(_currentNodeIndex));
+        // }
 
         private void UpdateRotationTarget(ref float rotationProgress, ref Quaternion previousRotation)
         {

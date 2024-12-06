@@ -37,7 +37,6 @@ public class TurnManager : PersistentSingelton<TurnManager>
         if (PlayerActionManager.Instance.SelectedUnit != null)
         {
             PlayerActionManager.Instance.SetSelectedAbility(PlayerActionManager.Instance.SelectedUnit.MoveAbility);
-            //TODO reset UI ability panel
         }
         else
         {

@@ -79,6 +79,16 @@ namespace Navigation
         {
             return m_areaElements.Values.ToArray();
         }
-    }
 
+        public bool IsNodeAdjacent(int NodeIndex)
+        {
+            List<int> adjacentIndexes = m_navGrid.AdjacentNodeIndexes(NodeIndex);
+
+            foreach (int index in adjacentIndexes)
+            {
+                if (ContainsNode(index)) return true;
+            }
+            return false;
+        }
+    }
 }

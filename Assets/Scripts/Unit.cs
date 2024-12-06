@@ -1,11 +1,18 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Navigation;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class Unit : MonoBehaviour
 {
+    public enum State
+    {
+        Idle,
+        Moving,
+        MeleeAttacking,
+    }
 
     private Animator _animator;
     private Actor _actor;
@@ -19,6 +26,7 @@ public class Unit : MonoBehaviour
     [SerializeField] private Ability _moveAbility;
     [SerializeField] private List<Ability> _abilities;
     WalkableArea _walkableAreaCache;
+    [ShowInInspector] State _state;
 
     public bool IsPlayer { get => _isPlayer; }
     public int MovementPoints { get => _movementPoints; }
@@ -56,15 +64,20 @@ public class Unit : MonoBehaviour
         _walkableAreaCache = null;
     }
 
-    public void MoveAlongPath(Path path)
+    public async Task MoveAlongPath(Path path)
     {
         _currentMovementPoints -= path.cost;
-        _actor.MoveAlongPath(path);
         NullifyWalkableArea();
+        await _actor.MoveAlongPath(path);
     }
 
     internal void RefreshOnNewTurn()
     {
         _currentMovementPoints = _movementPoints;
+    }
+
+    public void SetState(State newState)
+    {
+        _state = newState;
     }
 }

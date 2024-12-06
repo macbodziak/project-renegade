@@ -1,5 +1,6 @@
 using UnityEngine;
 using Navigation;
+using System.Threading.Tasks;
 
 
 [CreateAssetMenu(fileName = "MoveAbility", menuName = "Abilitites/Move")]
@@ -15,18 +16,14 @@ public class MoveAbility : Ability
         Unit unit = args.Unit;
         Path path = args.Path;
 
-        unit.MoveAlongPath(path);
+        Task moveAlongTask = unit.MoveAlongPath(path);
 
-        if (unit.actor.State == ActorState.Moving)
-        {
-            unit.animator.SetBool("Running", true);
-        }
+        unit.animator.SetBool("Running", true);
 
-        while (unit.actor.State != ActorState.Idle)
-        {
-            await Awaitable.NextFrameAsync();
-        }
+        await moveAlongTask;
+
         unit.animator.SetBool("Running", false);
+
         actionManager.OnSelectedAcionCompleted();
     }
 }
