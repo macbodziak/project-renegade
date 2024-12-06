@@ -12,7 +12,7 @@ public class InputManager : PersistentSingelton<InputManager>
         SelectSingleMeleeTarget,
         Confirm,
         InputBlocked,
-        None
+        Null
     }
 
     [SerializeField]
@@ -32,9 +32,8 @@ public class InputManager : PersistentSingelton<InputManager>
 
     public event Action InputStateChangedEvent;
 
-    // this array of input hanlders must be the same as the order of enums in InputState
-    // there has to be an input state class created for derived from BaseInputState
-    private List<InputStateHandler> inputHandlers;
+    // for each input state, there needs to be a coresponding input stte handler
+    private Dictionary<State, InputStateHandler> _inputHandlers;
 
     protected override void InitializeOnAwake()
     {
@@ -62,8 +61,8 @@ public class InputManager : PersistentSingelton<InputManager>
     {
         _currentInputStateHandler.OnExit();
         _currentState = _nextState;
-        _currentInputStateHandler = inputHandlers[(int)_nextState];
-        _nextState = State.None;
+        _currentInputStateHandler = _inputHandlers[_nextState];
+        _nextState = State.Null;
         _currentInputStateHandler.OnEnter();
         _isStateChangeRequested = false;
         InputStateChangedEvent?.Invoke();
@@ -93,14 +92,13 @@ public class InputManager : PersistentSingelton<InputManager>
 
     private void InitializeInputHanlders()
     {
-        inputHandlers = new()
-        {
-            new SelectUnitHandler(_inputLayerMask),
-            new SelectMovementTargetHandler(_inputLayerMask),
-            new SelectSingleMeleeTargetHandler(_inputLayerMask),
-            new ConfirmHandler(0),
-            new InputBlockedHandler(0)
-        };
+        _inputHandlers = new();
+        _inputHandlers.Add(State.SelectUnit, new SelectUnitHandler(_inputLayerMask));
+        _inputHandlers.Add(State.SelectMovementTarget, new SelectMovementTargetHandler(_inputLayerMask));
+        _inputHandlers.Add(State.SelectSingleMeleeTarget, new SelectSingleMeleeTargetHandler(_inputLayerMask));
+        _inputHandlers.Add(State.InputBlocked, new InputBlockedHandler(0));
+        _inputHandlers.Add(State.Confirm, new ConfirmHandler(0));
+        _inputHandlers.Add(State.Null, new NullHandler(0));
     }
 
 
@@ -109,8 +107,8 @@ public class InputManager : PersistentSingelton<InputManager>
         //state related variables
         _isStateChangeRequested = false;
         _currentState = State.SelectUnit;
-        _nextState = State.None;
-        _currentInputStateHandler = inputHandlers[(int)_currentState];
+        _nextState = State.Null;
+        _currentInputStateHandler = _inputHandlers[_currentState];
     }
 
 #if UNITY_EDITOR
