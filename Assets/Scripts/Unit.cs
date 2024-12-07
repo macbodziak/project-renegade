@@ -68,7 +68,7 @@ public class Unit : MonoBehaviour
     {
         _currentMovementPoints -= path.cost;
         NullifyWalkableArea();
-        await _actor.MoveAlongPath(path);
+        await _actor.MoveAlongPathAsync(path);
     }
 
     internal void RefreshOnNewTurn()

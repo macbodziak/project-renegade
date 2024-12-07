@@ -11,6 +11,6 @@ public class SimpleMovementTest : MonoBehaviour
     void Start()
     {
         Path path = Pathfinder.FindPath(grid, 0, 0, 5, 5);
-        _ = actor.MoveAlongPath(path);
+        actor.MoveAlongPath(path);
     }
 }

@@ -72,7 +72,7 @@ public class PathfindingExample : MonoBehaviour
                     ClearPathPreview();
                     inputBlocked = true;
                     selectedActor.MovementFinishedEvent += OnActorFinishedMovement;
-                    _ = selectedActor.MoveAlongPath(path);
+                    selectedActor.MoveAlongPath(path);
                 }
                 else
                 {

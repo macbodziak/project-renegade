@@ -80,7 +80,7 @@ public class PathfindingAsyncExample : MonoBehaviour
                     ClearPathPreview();
                     inputBlocked = true;
                     selectedActor.MovementFinishedEvent += OnActorFinishedMovement;
-                    _ = selectedActor.MoveAlongPath(path);
+                    selectedActor.MoveAlongPath(path);
 
                     path = null;
                 }

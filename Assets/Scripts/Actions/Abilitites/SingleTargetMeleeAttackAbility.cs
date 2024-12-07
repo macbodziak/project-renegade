@@ -18,7 +18,7 @@ public class SingleTargetMeleeAttackAbility : Ability
             args.AttackingUnit.animator.SetBool("Running", false);
         }
 
-        Task faceTowardsTask = args.AttackingUnit.actor.FaceTowards(args.TargetUnit.WorldPosition);
+        Task faceTowardsTask = args.AttackingUnit.actor.FaceTowardsAsync(args.TargetUnit.WorldPosition);
 
         while (faceTowardsTask.IsCompleted == false)
         {

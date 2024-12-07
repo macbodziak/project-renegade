@@ -91,7 +91,7 @@ namespace Navigation
             _state = ActorState.Uninitilized;
         }
 
-        public async Task MoveAlongPath(Path path)
+        public async Task MoveAlongPathAsync(Path path)
         {
             if (path == null)
             {
@@ -146,48 +146,67 @@ namespace Navigation
             MovementFinishedEvent?.Invoke(this, new ActorFinishedMovementEventArgs(_currentNodeIndex));
         }
 
-        // private IEnumerator MoveAlongPathCoroutine()
-        // {
-        //     OnMovementStarted();
 
-        //     Quaternion previousRotation = transform.rotation;
-        //     float rotationProgress = 0f;
+        public void MoveAlongPath(Path path)
+        {
+            if (path == null)
+            {
+                return;
+            }
 
-        //     while (_pathIndex < _path.Count)
-        //     {
-        //         _previousNodeIndex = _currentNodeIndex;
-        //         _currentNodeIndex = _path[_pathIndex].nodeIndex;
-        //         OnNodeExiting();
+            if (_state != ActorState.Idle)
+            {
+                return;
+            }
 
-        //         _targetPosition = _path[_pathIndex].worldPosition;
+            _path = path;
 
-        //         UpdateRotationTarget(ref rotationProgress, ref previousRotation);
+            StartCoroutine(MoveAlongPathCoroutine());
+        }
 
 
-        //         while (transform.position != _targetPosition)
-        //         {
-        //             if (_state == ActorState.Moving)
-        //             {
-        //                 float delta = _speed * _speedModifier * Time.deltaTime;
-        //                 rotationProgress += _rotationSpeed * _speedModifier * Time.deltaTime;
-        //                 transform.position = Vector3.MoveTowards(transform.position, _targetPosition, delta);
-        //                 transform.rotation = Quaternion.Slerp(previousRotation, _targetRotation, rotationProgress);
-        //             }
-        //             yield return null;
-        //         }
+        private IEnumerator MoveAlongPathCoroutine()
+        {
+            OnMovementStarted();
 
-        //         OnNodeEntered();
+            Quaternion previousRotation = transform.rotation;
+            float rotationProgress = 0f;
 
-        //         _pathIndex++;
+            while (_pathIndex < _path.Count)
+            {
+                _previousNodeIndex = _currentNodeIndex;
+                _currentNodeIndex = _path[_pathIndex].nodeIndex;
+                OnNodeExiting();
 
-        //         if (_cancelFlag || _pathIndex == _path.Count)
-        //         {
-        //             _cancelFlag = false;
-        //             _state = ActorState.Idle;
-        //         }
-        //     }
-        //     MovementFinishedEvent?.Invoke(this, new ActorFinishedMovementEventArgs(_currentNodeIndex));
-        // }
+                _targetPosition = _path[_pathIndex].worldPosition;
+
+                UpdateRotationTarget(ref rotationProgress, ref previousRotation);
+
+
+                while (transform.position != _targetPosition)
+                {
+                    if (_state == ActorState.Moving)
+                    {
+                        float delta = _speed * _speedModifier * Time.deltaTime;
+                        rotationProgress += _rotationSpeed * _speedModifier * Time.deltaTime;
+                        transform.position = Vector3.MoveTowards(transform.position, _targetPosition, delta);
+                        transform.rotation = Quaternion.Slerp(previousRotation, _targetRotation, rotationProgress);
+                    }
+                    yield return null;
+                }
+
+                OnNodeEntered();
+
+                _pathIndex++;
+
+                if (_cancelFlag || _pathIndex == _path.Count)
+                {
+                    _cancelFlag = false;
+                    _state = ActorState.Idle;
+                }
+            }
+            MovementFinishedEvent?.Invoke(this, new ActorFinishedMovementEventArgs(_currentNodeIndex));
+        }
 
         private void UpdateRotationTarget(ref float rotationProgress, ref Quaternion previousRotation)
         {
@@ -247,7 +266,7 @@ namespace Navigation
         }
 
 
-        public async Task FaceTowards(Vector3 worldPosition)
+        public async Task FaceTowardsAsync(Vector3 worldPosition)
         {
             if (_state != ActorState.Idle)
             {
@@ -268,6 +287,37 @@ namespace Navigation
             _state = ActorState.Idle;
             await Awaitable.NextFrameAsync();
         }
+
+
+        public void FaceTowards(Vector3 worldPosition)
+        {
+            if (_state != ActorState.Idle)
+            {
+                return;
+            }
+            StartCoroutine(FaceTowardsCoroutine(worldPosition));
+        }
+
+        private IEnumerator FaceTowardsCoroutine(Vector3 worldPosition)
+        {
+            _state = ActorState.Moving;
+            Quaternion startRotation = transform.rotation;
+            Quaternion targetRotation = Quaternion.LookRotation(worldPosition - transform.position);
+            float progress = _rotationSpeed * _speedModifier * Time.deltaTime;
+
+            while (progress < 1)
+            {
+                transform.rotation = Quaternion.Slerp(startRotation, targetRotation, progress);
+                progress += _rotationSpeed * _speedModifier * Time.deltaTime;
+                yield return null;
+            }
+            _state = ActorState.Idle;
+            yield return null;
+        }
+
+
+
+        ///--------
 
         public void FaceTowardsInstantly(Vector3 worldPosition)
         {
