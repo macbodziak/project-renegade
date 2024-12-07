@@ -6,6 +6,8 @@ public class SelectSingleMeleeTargetHandler : InputStateHandler
 {
     WalkableArea _walkablearea;
     Dictionary<Unit, Path> _pathCache;
+    Unit _hoveredUnit;
+    GameObject _hoveredObject;
 
     public override string PromptText => "select target";
 
@@ -23,6 +25,12 @@ public class SelectSingleMeleeTargetHandler : InputStateHandler
     {
         LevelManager.Instance.HidePathPreview();
         _pathCache.Clear();
+        if (_hoveredUnit != null && !_hoveredUnit.IsPlayer)
+        {
+            SelectionIndicator indicator = _hoveredUnit.GetComponent<SelectionIndicator>();
+            indicator.IsReviewed = false;
+        }
+
     }
 
     public override void HandleInput()
@@ -92,31 +100,31 @@ public class SelectSingleMeleeTargetHandler : InputStateHandler
 
     protected override void OnMouseEnterObject(GameObject gameObject)
     {
-        Unit unit = gameObject.GetComponent<Unit>();
-        if (unit != null)
+        _hoveredUnit = gameObject.GetComponent<Unit>();
+        if (_hoveredUnit != null)
         {
-            if (!unit.IsPlayer)
+            if (!_hoveredUnit.IsPlayer)
             {
-                SelectionIndicator indicator = unit.GetComponent<SelectionIndicator>();
+                SelectionIndicator indicator = _hoveredUnit.GetComponent<SelectionIndicator>();
                 indicator.IsReviewed = true;
 
                 //if unit is within the reachable area show path
-                if (_walkablearea != null && _walkablearea.IsNodeAdjacent(unit.NodeIndex))
+                if (_walkablearea != null && _walkablearea.IsNodeAdjacent(_hoveredUnit.NodeIndex))
                 {
                     Path path;
                     //check if path was already calculated this iteration
-                    if (_pathCache.ContainsKey(unit))
+                    if (_pathCache.ContainsKey(_hoveredUnit))
                     {
-                        path = _pathCache[unit];
+                        path = _pathCache[_hoveredUnit];
                     }
                     else
                     {
                         //if path not yet cached, calculate it and cahce it
                         path = Pathfinder.FindPath(LevelManager.Instance.Grid,
                                                    PlayerActionManager.Instance.SelectedUnit.NodeIndex,
-                                                   unit.NodeIndex,
+                                                   _hoveredUnit.NodeIndex,
                                                    true);
-                        _pathCache.Add(unit, path);
+                        _pathCache.Add(_hoveredUnit, path);
                     }
 
                     LevelManager.Instance.ShowPathPreview(path);
@@ -127,10 +135,10 @@ public class SelectSingleMeleeTargetHandler : InputStateHandler
 
     protected override void OnMouseExitObject(GameObject gameObject)
     {
-        Unit unit = gameObject.GetComponent<Unit>();
-        if (unit != null && !unit.IsPlayer)
+        _hoveredUnit = gameObject.GetComponent<Unit>();
+        if (_hoveredUnit != null && !_hoveredUnit.IsPlayer)
         {
-            SelectionIndicator indicator = unit.GetComponent<SelectionIndicator>();
+            SelectionIndicator indicator = _hoveredUnit.GetComponent<SelectionIndicator>();
             indicator.IsReviewed = false;
 
             LevelManager.Instance.HidePathPreview();
