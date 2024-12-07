@@ -101,7 +101,14 @@ public class PlayerActionManager : PersistentSingelton<PlayerActionManager>, IAc
         }
         else
         {
-            InputManager.Instance.SetState(InputManager.State.SelectUnit);
+            if (_selectedUnit == null)
+            {
+                InputManager.Instance.SetState(InputManager.State.SelectUnit);
+            }
+            else
+            {
+                InputManager.Instance.SetState(InputManager.State.SelectMovementTarget);
+            }
         }
 
         if (_selectedAbility == ability) return;
@@ -143,14 +150,28 @@ public class PlayerActionManager : PersistentSingelton<PlayerActionManager>, IAc
         if (_selectedUnit != null)
         {
             SetSelectedAbility(_selectedUnit.MoveAbility);
-            // InputManager.Instance.SetState(InputManager.State.SelectMovementTarget);
         }
         else
         {
             SetSelectedAbility(null);
-            // InputManager.Instance.SetState(InputManager.State.SelectUnit);
         }
         LevelManager.Instance.NullifyPlayerWalkableAreas();
         ActionExecutionFinishedEvent?.Invoke();
+    }
+
+    /// <summary>
+    /// Handles the cancellation of the current selection.
+    /// If an ability is currently selected, it deselects.
+    /// Otherwise, it deselects the currently selected unit.
+    /// </summary>
+    public void OnCancelSelection()
+    {
+        if (_selectedAbility != null && _selectedAbility != _selectedUnit.MoveAbility)
+        {
+            SetSelectedAbility(_selectedUnit.MoveAbility);
+            return;
+        }
+
+        SelectUnit(null);
     }
 }

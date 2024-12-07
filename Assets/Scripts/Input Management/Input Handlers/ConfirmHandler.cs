@@ -31,6 +31,6 @@ public class ConfirmHandler : InputStateHandler
 
     private void OnCancel()
     {
-        PlayerActionManager.Instance.SelectUnit(null);
+        PlayerActionManager.Instance.OnCancelSelection();
     }
 }
