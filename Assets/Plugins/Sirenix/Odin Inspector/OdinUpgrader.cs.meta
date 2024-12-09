@@ -1,8 +1,12 @@
 fileFormatVersion: 2
-guid: 90eaa0dc28c1934408dc1c02e13a507f
-timeCreated: 1628274352
+guid: 9a8a412f231f4274698005c7c1daac28
+timeCreated: 1514513487
 licenseType: Store
-TextScriptImporter:
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
   userData: 
   assetBundleName: 
   assetBundleVariant: 
@@ -11,5 +15,5 @@ AssetOrigin:
   productId: 89041
   packageName: Odin Inspector and Serializer
   packageVersion: 3.3.1.11
-  assetPath: Assets/Plugins/Sirenix/Odin Inspector/Assets/Editor/ConfigData.bytes
+  assetPath: Assets/Plugins/Sirenix/Odin Inspector/OdinUpgrader.cs
   uploadId: 712389

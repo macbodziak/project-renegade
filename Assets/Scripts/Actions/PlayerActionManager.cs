@@ -136,6 +136,8 @@ public class PlayerActionManager : PersistentSingelton<PlayerActionManager>, IAc
 
         InputManager.Instance.SetState(InputManager.State.InputBlocked);
         ActionExecutionStartedEvent?.Invoke();
+        //TODO - refactor so this is a async Task, instead of this, just monitor the task and call on Action Completed from here
+        //TODO - also, maybe there should be a sequence of several smaller tasks, like walking up to an enemy + facing it + striking
         _selectedAbility.Execute(this, abilityArgs);
 
     }
