@@ -35,8 +35,15 @@ public class AbilityButtonController : MonoBehaviour, IPointerEnterHandler, IPoi
     public void SetUp(Ability ability)
     {
         _ability = ability;
-        _iconImage.sprite = _ability.Sprite;
-        //TODO if sprite == null load a default sprite
+        if (_ability.Sprite != null)
+        {
+            _iconImage.sprite = _ability.Sprite;
+        }
+        else
+        {
+            //TODO if sprite == null load a default sprite
+            Debug.Log("missing sprite for ability");
+        }
 
     }
 
