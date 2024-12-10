@@ -1,6 +1,7 @@
+using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
-
+using Utilities;
 
 [CreateAssetMenu(fileName = "BaseAbility", menuName = "Abilitites/Base Ability")]
 public abstract class Ability : ScriptableObject
@@ -30,6 +31,7 @@ public abstract class Ability : ScriptableObject
 
 
     #region methods
-    public abstract void Execute(IActionManager actionManager, AbilityArgs args);
+    //TODO give this method a better name
+    public abstract List<ICommand> GetCommands(AbilityArgs args);
     #endregion
 }

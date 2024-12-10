@@ -2,7 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Navigation;
+using Sirenix.OdinInspector;
 using UnityEngine;
+using Utilities;
 
 public class PlayerActionManager : PersistentSingelton<PlayerActionManager>, IActionManager
 {
@@ -10,6 +12,7 @@ public class PlayerActionManager : PersistentSingelton<PlayerActionManager>, IAc
     private Unit _selectedUnit;
     [SerializeField]
     private Ability _selectedAbility;
+    private CommandQueue _abilityCommandQueue;
 
     public Unit SelectedUnit { get => _selectedUnit; }
     public Ability SelectedAbility { get => _selectedAbility; }
@@ -37,6 +40,8 @@ public class PlayerActionManager : PersistentSingelton<PlayerActionManager>, IAc
     protected override void InitializeOnAwake()
     {
         _selectedUnit = null;
+        _abilityCommandQueue = new CommandQueue();
+        _abilityCommandQueue.OnExecutionCompleted += OnSelectedAbilityExecutionCompleted;
     }
 
 
@@ -122,11 +127,10 @@ public class PlayerActionManager : PersistentSingelton<PlayerActionManager>, IAc
 
 
     /// <summary>
-    /// Executes the currently selected action with the provided ability arguments.
-    /// Blocks user input and triggers the action execution events.
+    /// Executes the currently selected ability with the provided ability arguments.
+    /// Blocks user input until all commands given by ability are executed.  
     /// </summary>
     /// <param name="abilityArgs">Arguments required for the selected ability to execute.</param>
-
     public void ExecuteSelectedAction(AbilityArgs abilityArgs)
     {
         if (_selectedAbility == null)
@@ -136,18 +140,16 @@ public class PlayerActionManager : PersistentSingelton<PlayerActionManager>, IAc
 
         InputManager.Instance.SetState(InputManager.State.InputBlocked);
         ActionExecutionStartedEvent?.Invoke();
-        //TODO - refactor so this is a async Task, instead of this, just monitor the task and call on Action Completed from here
-        //TODO - also, maybe there should be a sequence of several smaller tasks, like walking up to an enemy + facing it + striking
-        _selectedAbility.Execute(this, abilityArgs);
-
+        List<ICommand> commands = _selectedAbility.GetCommands(abilityArgs);
+        _abilityCommandQueue.Add(commands);
+        _abilityCommandQueue.Execute();
     }
-
 
     /// <summary>
     /// Finalizes the execution of the selected action by resetting the default ability to movement, 
     /// setting the input state, clearing walkable areas, and triggering the action completion event.
     /// </summary>
-    public void OnSelectedAcionCompleted()
+    public void OnSelectedAbilityExecutionCompleted()
     {
         if (_selectedUnit != null)
         {
@@ -175,5 +177,18 @@ public class PlayerActionManager : PersistentSingelton<PlayerActionManager>, IAc
         }
 
         SelectUnit(null);
+    }
+
+
+    [Button("Cancel Command Queue")]
+    public void TestCancelActions()
+    {
+        _abilityCommandQueue.Cancel();
+    }
+
+    [Button("Stop Command Queue")]
+    public void TestStopActions()
+    {
+        _abilityCommandQueue.Stop();
     }
 }

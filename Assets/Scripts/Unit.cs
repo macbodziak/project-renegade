@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Navigation;
 using Sirenix.OdinInspector;
@@ -64,11 +65,18 @@ public class Unit : MonoBehaviour
         _walkableAreaCache = null;
     }
 
-    public async Task MoveAlongPath(Path path)
+    public async Task MoveAlongPath(Path path, CancellationToken cancellationToken)
     {
         _currentMovementPoints -= path.cost;
         NullifyWalkableArea();
-        await _actor.MoveAlongPathAsync(path);
+        animator.SetBool("Running", true);
+        await _actor.MoveAlongPathAsync(path, cancellationToken);
+        animator.SetBool("Running", false);
+    }
+
+    public Task FaceTowards(Vector3 worldPosition)
+    {
+        return actor.FaceTowardsAsync(worldPosition);
     }
 
     internal void RefreshOnNewTurn()

@@ -1,4 +1,5 @@
 using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Utilities
@@ -11,6 +12,6 @@ namespace Utilities
     // </summary>
     public interface ICommand
     {
-        public Awaitable Execute(CancellationToken token);
+        public Task Execute(CancellationToken token);
     }
 }

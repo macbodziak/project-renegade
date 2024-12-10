@@ -18,7 +18,7 @@ namespace Utilities
         public bool IsExecuting { get; private set; }
         bool _stopRequested;
 
-        public event EventHandler ExecutionCompletedEvent;
+        public event Action OnExecutionCompleted;
 
         public CommandQueue()
         {
@@ -57,7 +57,7 @@ namespace Utilities
             }
             _commandQueue.Clear();
             IsExecuting = false;
-            ExecutionCompletedEvent?.Invoke(this, EventArgs.Empty);
+            OnExecutionCompleted?.Invoke();
         }
 
         // <summary>
@@ -114,6 +114,14 @@ namespace Utilities
         {
             _tokenSource.Cancel();
             _tokenSource.Dispose();
+        }
+
+        public void Add(List<ICommand> commands)
+        {
+            foreach (ICommand command in commands)
+            {
+                _commandQueue.Enqueue(command);
+            }
         }
     }
 }

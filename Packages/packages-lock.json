@@ -1,15 +1,14 @@
 {
   "dependencies": {
     "com.maciejbodziak.navigationgrid": {
-      "version": "https://github.com/macbodziak/navigation-grid-unity-package.git",
+      "version": "file:D:/Unity Projects/Map/Assets/Navigation",
       "depth": 0,
-      "source": "git",
+      "source": "local",
       "dependencies": {
         "com.unity.burst": "1.8.18",
         "com.unity.mathematics": "1.3.2",
         "com.unity.collections": "2.5.1"
-      },
-      "hash": "1d3e796f9affadebdfcc26e2acc674ed03d6e16d"
+      }
     },
     "com.unity.2d.sprite": {
       "version": "1.0.0",
