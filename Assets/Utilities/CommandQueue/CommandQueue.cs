@@ -4,11 +4,11 @@ using System.Threading;
 
 namespace Utilities
 {
-    // <summary>
-    // This class receives coroutines implementing the IInstantCommand or ICouroutineCommand 
-    // interface to be later executed sequentially. 
-    // It needs to receive a monobehaviour as a parameter, to which coroutines will be attached.
-    // </summary>
+    /// <summary>
+    /// This class receives coroutines implementing the IInstantCommand or ICouroutineCommand 
+    /// interface to be later executed sequentially. 
+    /// It needs to receive a monobehaviour as a parameter, to which coroutines will be attached.
+    /// </summary>
     public class CommandQueue
     {
 
@@ -28,9 +28,9 @@ namespace Utilities
             _tokenSource = new();
         }
 
-        // <summary>
-        // This method starts executing queued commands 
-        // </summary>
+        /// <summary>
+        /// This method starts executing queued commands 
+        /// </summary>
         public async void Execute()
         {
             if (IsExecuting == true)
@@ -60,9 +60,9 @@ namespace Utilities
             OnExecutionCompleted?.Invoke();
         }
 
-        // <summary>
-        // This method orders the Queue to stop executing command once the currently executing command finishes execution
-        // </summary>
+        /// <summary>
+        /// This method orders the Queue to stop executing command once the currently executing command finishes execution
+        /// </summary>
         public void Stop()
         {
             if (IsExecuting)
@@ -75,10 +75,10 @@ namespace Utilities
             }
         }
 
-        // <summary>
-        // This method orders the Queue to stop executing commands immediately and cancels the currently
-        // executing task
-        // </summary>
+        /// <summary>
+        /// This method orders the Queue to stop executing commands immediately and cancels the currently
+        /// executing task abruptly
+        /// </summary>
         public void Cancel()
         {
             _tokenSource.Cancel();
@@ -87,10 +87,10 @@ namespace Utilities
             _commandQueue.Clear();
         }
 
-        // <summary>
-        // Removes all queued routines from the queue if the queue has not started execution.
-        // This is not intended to be called during execution.
-        // </summary>
+        /// <summary>
+        /// Removes all queued routines from the queue if the queue has not started execution.
+        /// This is not intended to be called during execution.
+        /// </summary>
         public void Clear()
         {
             if (IsExecuting == true)
@@ -102,9 +102,9 @@ namespace Utilities
             _stopRequested = false;
         }
 
-        // <summary>
-        // Add a Command to the queue to be later executed
-        // </summary>
+        /// <summary>
+        /// Add a Command to the queue to be later executed
+        /// </summary>
         public void Add(ICommand command)
         {
             _commandQueue.Enqueue(command);
