@@ -8,9 +8,7 @@ using Utilities;
 
 public class PlayerActionManager : PersistentSingelton<PlayerActionManager>, IActionManager
 {
-    [SerializeField]
     private Unit _selectedUnit;
-    [SerializeField]
     private Ability _selectedAbility;
     private CommandQueue _abilityCommandQueue;
 
@@ -179,15 +177,8 @@ public class PlayerActionManager : PersistentSingelton<PlayerActionManager>, IAc
         SelectUnit(null);
     }
 
-
-    [Button("Cancel Command Queue")]
-    public void TestCancelActions()
-    {
-        _abilityCommandQueue.Cancel();
-    }
-
     [Button("Stop Command Queue")]
-    public void TestStopActions()
+    public void DebugStopActions()
     {
         _abilityCommandQueue.Stop();
     }
