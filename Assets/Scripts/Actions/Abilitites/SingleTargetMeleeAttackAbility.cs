@@ -15,7 +15,10 @@ public class SingleTargetMeleeAttackAbility : Ability
     {
         SingleMeleeTargetArgs abArgs = args as SingleMeleeTargetArgs;
         List<ICommand> commands = new();
-        commands.Add(new MoveAlongPathCommand(abArgs.AttackingUnit, abArgs.Path));
+        if (abArgs.Path != null)
+        {
+            commands.Add(new MoveAlongPathCommand(abArgs.AttackingUnit, abArgs.Path));
+        }
         commands.Add(new FaceTowardsCommand(abArgs.AttackingUnit, abArgs.TargetUnit.WorldPosition));
         commands.Add(new MeleeAttackCommand(abArgs.AttackingUnit, abArgs.TargetUnit));
         return commands;
