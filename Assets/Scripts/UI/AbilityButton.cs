@@ -1,9 +1,13 @@
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.EventSystems;
+using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.UI;
 
 public class AbilityButtonController : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
+    static readonly string defaultIconAddress = "DefaultIcons/error_icon_02_96px.png";
+    AsyncOperationHandle<Sprite> _defualtIconOpHandle;
     [SerializeField] Image _iconImage;
     [SerializeField] Image _selectionFrameImage;
     [SerializeField] AbilitiesPanel _parentPanel;
@@ -41,10 +45,28 @@ public class AbilityButtonController : MonoBehaviour, IPointerEnterHandler, IPoi
         }
         else
         {
-            //TODO if sprite == null load a default sprite
-            Debug.Log("missing sprite for ability");
+            LoadFallbackIcon();
         }
 
+    }
+
+    private void LoadFallbackIcon()
+    {
+        Addressables.LoadAssetAsync<Sprite>(defaultIconAddress).Completed += (opHanlde) =>
+            {
+                _defualtIconOpHandle = opHanlde;
+                if (_defualtIconOpHandle.Status == AsyncOperationStatus.Succeeded)
+                {
+                    _iconImage.sprite = opHanlde.Result;
+                }
+                else
+                {
+                    Debug.Log("<color=#ffa08b>Failed to Load Icon: </color>" + defaultIconAddress);
+                    Debug.Log("<color=#ffa08b>EX: </color> " + _defualtIconOpHandle.OperationException.Message);
+                    _defualtIconOpHandle.Release();
+                }
+
+            };
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -84,6 +106,14 @@ public class AbilityButtonController : MonoBehaviour, IPointerEnterHandler, IPoi
         else
         {
             _iconImage.color = _inactiveIconTint;
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (_defualtIconOpHandle.IsValid())
+        {
+            _defualtIconOpHandle.Release();
         }
     }
 }
