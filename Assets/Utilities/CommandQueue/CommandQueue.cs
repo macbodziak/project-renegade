@@ -19,6 +19,7 @@ namespace Utilities
         bool _stopRequested;
 
         public event Action OnExecutionCompleted;
+        public event Action OnExecutionCanceled;
 
         public CommandQueue()
         {
@@ -85,6 +86,7 @@ namespace Utilities
             _tokenSource.Dispose();
             _tokenSource = new();
             _commandQueue.Clear();
+            OnExecutionCanceled?.Invoke();
         }
 
         /// <summary>
