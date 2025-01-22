@@ -1,28 +1,25 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Navigation;
 using Sirenix.OdinInspector;
-using UnityEngine;
 using Utilities;
 
 public class PlayerActionManager : PersistentSingelton<PlayerActionManager>, IActionManager
 {
-    private Unit _selectedUnit;
-    private Ability _selectedAbility;
     private CommandQueue _abilityCommandQueue;
 
-    public Unit SelectedUnit { get => _selectedUnit; }
-    public Ability SelectedAbility { get => _selectedAbility; }
+    public Unit SelectedUnit { get; private set; }
+    public Ability SelectedAbility { get; private set; }
+
     public int SelectedUnitNodeIndex
     {
         get
         {
-            if (_selectedUnit == null)
+            if (SelectedUnit == null)
             {
                 return -1;
             }
-            return _selectedUnit.GetComponent<Actor>().NodeIndex;
+            return SelectedUnit.GetComponent<Actor>().NodeIndex;
         }
     }
 
@@ -37,7 +34,7 @@ public class PlayerActionManager : PersistentSingelton<PlayerActionManager>, IAc
     /// </summary>
     protected override void InitializeOnAwake()
     {
-        _selectedUnit = null;
+        SelectedUnit = null;
         _abilityCommandQueue = new CommandQueue();
         _abilityCommandQueue.OnExecutionCompleted += OnSelectedAbilityExecutionCompleted;
     }
@@ -50,26 +47,26 @@ public class PlayerActionManager : PersistentSingelton<PlayerActionManager>, IAc
     /// <param name="unit">The unit to select. Pass null to deselect the current unit.</param>
     public void SelectUnit(Unit unit)
     {
-        if (unit == _selectedUnit) return;
+        if (unit == SelectedUnit) return;
 
         SelectionIndicator indicator;
         Unit previousUnit = null;
 
         //deselect previous unit if one was selected
-        if (_selectedUnit != null)
+        if (SelectedUnit is not null)
         {
-            previousUnit = _selectedUnit;
-            indicator = _selectedUnit.GetComponent<SelectionIndicator>();
-            if (indicator != null)
+            previousUnit = SelectedUnit;
+            indicator = SelectedUnit.SelectionIndicator;
+            if (indicator is not null)
             {
                 indicator.IsActive = false;
             }
-            _selectedUnit = null;
+            SelectedUnit = null;
         }
 
-        _selectedUnit = unit;
+        SelectedUnit = unit;
 
-        if (_selectedUnit == null)
+        if (SelectedUnit is null)
         {
             //unselect ability
             SetSelectedAbility(null);
@@ -77,18 +74,18 @@ public class PlayerActionManager : PersistentSingelton<PlayerActionManager>, IAc
         else
         {
             //activate the selection indicator
-            indicator = _selectedUnit.GetComponent<SelectionIndicator>();
-            if (indicator != null)
+            indicator = SelectedUnit.SelectionIndicator;
+            if (indicator is not null)
             {
                 indicator.IsActive = true;
             }
 
             //set the default ability to movement
-            SetSelectedAbility(_selectedUnit.MoveAbility);
+            SetSelectedAbility(SelectedUnit.MoveAbility);
         }
 
         //raise event 
-        UnitSelectionChangedEvent?.Invoke(new SelectedUnitChangedEventArgs(previousUnit, _selectedUnit));
+        UnitSelectionChangedEvent?.Invoke(new SelectedUnitChangedEventArgs(previousUnit, SelectedUnit));
     }
 
 
@@ -98,13 +95,13 @@ public class PlayerActionManager : PersistentSingelton<PlayerActionManager>, IAc
     /// <param name="ability">The ability to set as the currently selected ability. Pass null to deselect the ability.</param>
     public void SetSelectedAbility(Ability ability)
     {
-        if (ability != null)
+        if (ability is not null)
         {
             InputManager.Instance.SetState(ability.InputState);
         }
         else
         {
-            if (_selectedUnit == null)
+            if (SelectedUnit is null)
             {
                 InputManager.Instance.SetState(InputManager.State.SelectUnit);
             }
@@ -114,13 +111,13 @@ public class PlayerActionManager : PersistentSingelton<PlayerActionManager>, IAc
             }
         }
 
-        if (_selectedAbility == ability) return;
+        if (SelectedAbility == ability) return;
 
-        Ability previousAbility = _selectedAbility;
+        Ability previousAbility = SelectedAbility;
 
-        _selectedAbility = ability;
+        SelectedAbility = ability;
 
-        SelectedAbilityChangedEvent?.Invoke(new SelectedAbilityChangedEventArgs(previousAbility, _selectedAbility));
+        SelectedAbilityChangedEvent?.Invoke(new SelectedAbilityChangedEventArgs(previousAbility, SelectedAbility));
     }
 
 
@@ -131,14 +128,14 @@ public class PlayerActionManager : PersistentSingelton<PlayerActionManager>, IAc
     /// <param name="abilityArgs">Arguments required for the selected ability to execute.</param>
     public void ExecuteSelectedAction(AbilityArgs abilityArgs)
     {
-        if (_selectedAbility == null)
+        if (SelectedAbility is null)
         {
             return;
         }
 
         InputManager.Instance.SetState(InputManager.State.InputBlocked);
         ActionExecutionStartedEvent?.Invoke();
-        List<ICommand> commands = _selectedAbility.GetCommands(abilityArgs);
+        List<ICommand> commands = SelectedAbility.GetCommands(abilityArgs);
         _abilityCommandQueue.Add(commands);
         _abilityCommandQueue.Execute();
     }
@@ -149,9 +146,9 @@ public class PlayerActionManager : PersistentSingelton<PlayerActionManager>, IAc
     /// </summary>
     public void OnSelectedAbilityExecutionCompleted()
     {
-        if (_selectedUnit != null)
+        if (SelectedUnit is not null)
         {
-            SetSelectedAbility(_selectedUnit.MoveAbility);
+            SetSelectedAbility(SelectedUnit.MoveAbility);
         }
         else
         {
@@ -168,9 +165,9 @@ public class PlayerActionManager : PersistentSingelton<PlayerActionManager>, IAc
     /// </summary>
     public void OnCancelSelection()
     {
-        if (_selectedAbility != null && _selectedAbility != _selectedUnit.MoveAbility)
+        if (SelectedAbility is not null && SelectedAbility != SelectedUnit.MoveAbility)
         {
-            SetSelectedAbility(_selectedUnit.MoveAbility);
+            SetSelectedAbility(SelectedUnit.MoveAbility);
             return;
         }
 

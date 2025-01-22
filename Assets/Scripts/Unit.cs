@@ -8,11 +8,13 @@ using UnityEngine;
 
 public class Unit : MonoBehaviour
 {
-    public enum State
+    public enum ActivityState
     {
         Idle,
         Moving,
         MeleeAttacking,
+        RangeAttacking,
+        RangeAiming,
     }
 
     private Animator _animator;
@@ -26,18 +28,19 @@ public class Unit : MonoBehaviour
     private int _currentMovementPoints;
     [SerializeField] private Ability _moveAbility;
     [SerializeField] private List<Ability> _abilities;
-    WalkableArea _walkableAreaCache;
-    [ShowInInspector] State _state;
+    private WalkableArea _walkableAreaCache;
+    [ShowInInspector] private ActivityState _state;
 
     public bool IsPlayer { get => _isPlayer; }
     public int MovementPoints { get => _movementPoints; }
     public int CurrentMovementPoints { get => _currentMovementPoints; }
-    public Actor actor { get => _actor; }
+    public Actor Actor { get => _actor; }
     public int NodeIndex { get => _actor.NodeIndex; }
-    public Animator animator { get => _animator; }
+    public Animator Animator { get => _animator; }
     public List<Ability> Abilities { get => _abilities; }
     public Ability MoveAbility { get => _moveAbility; }
     public Vector3 WorldPosition { get => transform.position; }
+    public SelectionIndicator SelectionIndicator { get; private set ; }
 
     private void Awake()
     {
@@ -48,6 +51,7 @@ public class Unit : MonoBehaviour
     {
         _animator = GetComponentInChildren<Animator>();
         _actor = GetComponent<Actor>();
+        SelectionIndicator = GetComponent<SelectionIndicator>();
     }
 
     public WalkableArea GetWalkableArea()
@@ -69,14 +73,14 @@ public class Unit : MonoBehaviour
     {
         _currentMovementPoints -= path.cost;
         NullifyWalkableArea();
-        animator.SetBool("Running", true);
+        Animator.SetBool("Running", true);
         await _actor.MoveAlongPathAsync(path, cancellationToken);
-        animator.SetBool("Running", false);
+        Animator.SetBool("Running", false);
     }
 
     public Task FaceTowards(Vector3 worldPosition)
     {
-        return actor.FaceTowardsAsync(worldPosition);
+        return Actor.FaceTowardsAsync(worldPosition);
     }
 
     internal void RefreshOnNewTurn()
@@ -84,8 +88,28 @@ public class Unit : MonoBehaviour
         _currentMovementPoints = _movementPoints;
     }
 
-    public void SetState(State newState)
+    public void SetState(ActivityState newState)
     {
         _state = newState;
+
+        switch (_state)
+        {
+            case ActivityState.Idle:
+                // _animator.SetBool();
+                break;
+            case ActivityState.Moving:
+                break;
+            case ActivityState.MeleeAttacking:
+                break;
+            case ActivityState.RangeAttacking:
+                break;
+            case ActivityState.RangeAiming:
+                break;
+            default:
+                break;
+
+
+        }
+
     }
 }

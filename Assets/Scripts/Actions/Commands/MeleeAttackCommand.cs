@@ -5,7 +5,7 @@ using Utilities;
 
 public class MeleeAttackCommand : ICommand
 {
-    private Unit _attackingUnit;
+    private readonly Unit _attackingUnit;
     private Unit _targetUnit;
 
     public MeleeAttackCommand(Unit attackingUnit, Unit targetUnit)
@@ -17,7 +17,8 @@ public class MeleeAttackCommand : ICommand
     public async Task Execute(CancellationToken token)
     {
         Debug.Log("<color=#ffa08b>TO DO</color> add  logic here, such as HP reduction, AP reduction etc.");
-        _attackingUnit.animator.SetTrigger("AttackMelee");
-        await Awaitable.WaitForSecondsAsync(0.7f);
+        //todo abstract the animator
+        _attackingUnit.Animator.SetTrigger("AttackMelee");
+        await Awaitable.WaitForSecondsAsync(0.7f, token);
     }
 }

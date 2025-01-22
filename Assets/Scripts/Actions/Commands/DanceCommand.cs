@@ -5,8 +5,8 @@ using ICommand = Utilities.ICommand;
 
 public class DanceCommand : ICommand
 {
-    private Unit _unit;
-    private float _duration;
+    private readonly Unit _unit;
+    private readonly float _duration;
 
     public DanceCommand(Unit unit, float duration)
     {
@@ -20,16 +20,16 @@ public class DanceCommand : ICommand
         float time_now = Time.realtimeSinceStartup;
 
         //todo command should not be couppled to the units animator
-        _unit.animator.SetBool("Dancing", true);
+        _unit.Animator.SetBool("Dancing", true);
         while (time_now - time_start < _duration)
         {
             if (token.IsCancellationRequested)
             {
                 return;
             }
-            await Awaitable.NextFrameAsync();
+            await Awaitable.NextFrameAsync(token);
             time_now = Time.realtimeSinceStartup;
         }
-        _unit.animator.SetBool("Dancing", false);
+        _unit.Animator.SetBool("Dancing", false);
     }
 }
