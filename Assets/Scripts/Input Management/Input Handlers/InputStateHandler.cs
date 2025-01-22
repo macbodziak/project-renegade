@@ -4,14 +4,15 @@ using UnityEngine.EventSystems;
 
 public abstract class InputStateHandler
 {
-    protected LayerMask _layerMask;
+    private readonly LayerMask _layerMask;
     protected RaycastHit _currentHit;
     protected RaycastHit _previousHit;
-    protected GameObject _previouslyHitObject;
+    private GameObject _previouslyHitObject;
     protected GameObject _currentlyHitObject;
-    protected InputAction _selectInputAction;
-    protected InputAction _selectFocusInputAction;
-    protected InputAction _cancelInputAction;
+    protected readonly InputAction _selectInputAction;
+    protected readonly InputAction _selectFocusInputAction;
+    protected readonly InputAction _cancelInputAction;
+    private Camera _mainCamera;
 
     public abstract string PromptText { get; }
 
@@ -23,6 +24,8 @@ public abstract class InputStateHandler
         _selectInputAction = InputSystem.actions.FindAction("Select");
         _selectFocusInputAction = InputSystem.actions.FindAction("SelectAndFocus");
         _cancelInputAction = InputSystem.actions.FindAction("Cancel");
+        
+        _mainCamera = Camera.main;
 
 #if DEBUG
         Debug.Assert(_selectInputAction != null);
@@ -30,19 +33,19 @@ public abstract class InputStateHandler
         Debug.Assert(_selectFocusInputAction != null);
 #endif
     }
-
+    
 
     protected void UpdateRaycastHit()
     {
         _previousHit = _currentHit;
         _previouslyHitObject = _currentlyHitObject;
 
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Ray ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
         Physics.Raycast(ray, out _currentHit, Mathf.Infinity, _layerMask);
-        _currentlyHitObject = _currentHit.collider == null ? null : _currentHit.collider.gameObject;
+        _currentlyHitObject = _currentHit.collider?.gameObject;
     }
 
-    protected bool IsMouseOverUI()
+    protected static bool IsMouseOverUI()
     {
         if (EventSystem.current.IsPointerOverGameObject())
         {
@@ -57,26 +60,26 @@ public abstract class InputStateHandler
     public abstract void HandleInput();
 
 
-    public virtual void OnEnter() {; }
+    public virtual void OnEnter() { }
 
 
-    public virtual void OnExit() {; }
+    public virtual void OnExit() { }
 
     protected void ScanObjectUnderCursor()
     {
 
-        if (_currentlyHitObject != null && _currentlyHitObject == _previouslyHitObject)
+        if (_currentlyHitObject is not null && _currentlyHitObject == _previouslyHitObject)
         {
             OnMouseStayOverObject(_currentlyHitObject);
         }
 
         if (_currentlyHitObject != _previouslyHitObject)
         {
-            if (_previouslyHitObject != null)
+            if (_previouslyHitObject is not null)
             {
                 OnMouseExitObject(_previouslyHitObject);
             }
-            if (_currentlyHitObject != null)
+            if (_currentlyHitObject is not null)
             {
                 OnMouseEnterObject(_currentlyHitObject);
             }
