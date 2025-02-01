@@ -17,8 +17,7 @@ public class MeleeAttackCommand : ICommand
     public async Task Execute(CancellationToken token)
     {
         Debug.Log("<color=#ffa08b>TO DO</color> add  logic here, such as HP reduction, AP reduction etc.");
-        //todo abstract the animator
-        _attackingUnit.Animator.SetTrigger("AttackMelee");
+        _attackingUnit.AnimationHandler?.TriggerMeleeAttackAnimation();
         await Awaitable.WaitForSecondsAsync(0.7f, token);
     }
 }

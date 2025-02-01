@@ -19,17 +19,18 @@ public class DanceCommand : ICommand
         float time_start = Time.realtimeSinceStartup;
         float time_now = Time.realtimeSinceStartup;
 
-        //todo command should not be couppled to the units animator
-        _unit.Animator.SetBool("Dancing", true);
+        _unit.AnimationHandler?.PlayDanceAnimation();
         while (time_now - time_start < _duration)
         {
             if (token.IsCancellationRequested)
             {
                 return;
             }
+
             await Awaitable.NextFrameAsync(token);
             time_now = Time.realtimeSinceStartup;
         }
-        _unit.Animator.SetBool("Dancing", false);
+
+        _unit.AnimationHandler?.StopDanceAnimation();
     }
 }
