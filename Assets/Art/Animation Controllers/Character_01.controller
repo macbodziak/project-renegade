@@ -859,9 +859,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _events:
   - Name: Event1
-    TriggerTime: 0.078
+    TriggerTime: 0.774
   - Name: Execute Main Logic
-    TriggerTime: 0
+    TriggerTime: 0.266
 --- !u!1102 &5945497962814868137
 AnimatorState:
   serializedVersion: 6
@@ -984,7 +984,7 @@ AnimatorStateMachine:
     m_Position: {x: 910, y: 350, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -1703623084470836738}
-    m_Position: {x: 810, y: 420, z: 0}
+    m_Position: {x: 810, y: 430, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -2738495445805857398}
     m_Position: {x: 590, y: 460, z: 0}
