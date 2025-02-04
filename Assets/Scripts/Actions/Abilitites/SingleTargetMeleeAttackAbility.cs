@@ -1,26 +1,24 @@
-
-using System.Threading.Tasks;
 using UnityEngine;
-using System;
 using System.Collections.Generic;
 using Utilities;
 
-[CreateAssetMenu(fileName = "SingleTargetMeleeAttackAbility", menuName = "Abilitites/Single Target Melee Attack")]
+[CreateAssetMenu(fileName = "SingleTargetMeleeAttackAbility", menuName = "Abilities/Single Target Melee Attack")]
 public class SingleTargetMeleeAttackAbility : Ability
 {
     public override InputManager.State InputState => InputManager.State.SelectSingleMeleeTarget;
 
 
-    public override List<ICommand> GetCommands(AbilityArgs args)
+    public override List<ICommand> GetCommands(AbilityArgs abilityArgs)
     {
-        SingleMeleeTargetArgs abArgs = args as SingleMeleeTargetArgs;
+        SingleMeleeTargetArgs args = abilityArgs as SingleMeleeTargetArgs;
         List<ICommand> commands = new();
-        if (abArgs.Path != null)
+        if (args.Path != null)
         {
-            commands.Add(new MoveAlongPathCommand(abArgs.AttackingUnit, abArgs.Path));
+            commands.Add(new MoveAlongPathCommand(args.AttackingUnit, args.Path));
         }
-        commands.Add(new FaceTowardsCommand(abArgs.AttackingUnit, abArgs.TargetUnit.WorldPosition));
-        commands.Add(new MeleeAttackCommand(abArgs.AttackingUnit, abArgs.TargetUnit));
+
+        commands.Add(new FaceTowardsCommand(args.AttackingUnit, args.TargetUnit.WorldPosition));
+        commands.Add(new MeleeAttackCommand(args.AttackingUnit, args.TargetUnit));
         return commands;
     }
 }

@@ -34,8 +34,7 @@ public abstract class Ability : ScriptableObject
 
     #region methods
 
-    //TODO give this method a better name
-    public abstract List<ICommand> GetCommands(AbilityArgs args);
+    public abstract List<ICommand> GetCommands(AbilityArgs abilityArgs);
 
     #endregion
 }
