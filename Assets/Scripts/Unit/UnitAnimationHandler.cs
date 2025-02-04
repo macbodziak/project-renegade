@@ -52,15 +52,4 @@ public class UnitAnimationHandler : MonoBehaviour
         _animator.SetTrigger(_config.GetMeleeAttackHash());
         _commandInProgress = true;
     }
-
-    public void OnCommandAnimationFinished()
-    {
-        _commandInProgress = false;
-    }
-
-    public void OnAnimationEvent(string eventName)
-    {
-        //todo -complete
-        Debug.Log($"OnAnimationEvent: {eventName} has been raised");
-    }
 }

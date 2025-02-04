@@ -51,12 +51,12 @@ public class CommandStateBehaviour : StateMachineBehaviour
 
     public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        _animationHandler.OnCommandAnimationFinished();
+        EventManager.InvokeCommandAnimationCompleted();
     }
 
 
     private void RaiseEvent(string eventName)
     {
-        _animationHandler.OnAnimationEvent(eventName);
+        EventManager.InvokeOnCommandAnimationEvent(eventName);
     }
 }
